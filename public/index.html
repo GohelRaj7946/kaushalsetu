@@ -1,0 +1,954 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KaushalSetu | One Nation, One-Stop Solution for Industry Skill Alignment</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#f0fdf4', 100: '#dcfce7', 500: '#10b981', 600: '#059669', 900: '#064e3b' },
+            saffron: { 500: '#f59e0b', 600: '#d97706' },
+            navy: { 800: '#111827', 900: '#0b132b', 950: '#080d1a' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons & Canvas Confetti -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-[#080d1a] text-slate-100 min-h-screen flex flex-col">
+
+  <!-- Print Mount Point (ONLY this is printed when user clicks Print/Export PDF) -->
+  <div id="print-mount-point"></div>
+
+  <!-- Top Tricolor Indian Flag Strip -->
+  <div class="h-1.5 w-full bg-gradient-to-r from-amber-500 via-slate-100 to-emerald-500 sticky top-0 z-50 shadow-md"></div>
+
+  <!-- Main Navigation Header -->
+  <header class="sticky top-1.5 z-40 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Brand Identity -->
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="showPage('page-onboarding')">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-emerald-500 via-blue-600 to-amber-500 p-0.5 shadow-lg shadow-emerald-500/20">
+            <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+              <i data-lucide="compass" class="w-6 h-6 text-emerald-400"></i>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="text-2xl font-black tracking-tight text-white">Kaushal<span class="text-emerald-400">Setu</span></span>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">SIH PROTOTYPE</span>
+            </div>
+            <p class="text-[11px] font-medium text-slate-400 hidden sm:block">One Nation, One-Stop Solution for Industry Skill Alignment</p>
+          </div>
+        </div>
+
+        <!-- Real-Time Top Global Progress Bar -->
+        <div id="header-progress-widget" class="hidden md:flex items-center space-x-6 bg-slate-950/70 px-5 py-2.5 rounded-2xl border border-slate-800/80 shadow-inner">
+          <div class="flex flex-col">
+            <div class="flex items-center justify-between text-xs mb-1">
+              <span class="font-semibold text-slate-300 flex items-center gap-1.5">
+                <i data-lucide="activity" class="w-3.5 h-3.5 text-blue-400"></i>
+                Roadmap Progress
+              </span>
+              <span id="top-progress-text" class="font-bold text-emerald-400">0%</span>
+            </div>
+            <div class="w-40 h-2.5 bg-slate-800 rounded-full overflow-hidden">
+              <div id="top-progress-bar" class="h-full bg-gradient-to-r from-blue-500 via-emerald-400 to-amber-400 transition-all duration-500 rounded-full" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div class="h-8 w-px bg-slate-800"></div>
+
+          <div class="flex items-center space-x-4 text-xs">
+            <div>
+              <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Lectures</span>
+              <span id="top-lectures-stat" class="font-bold text-slate-200">0 / 0</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[10px] uppercase tracking-wider">Questions</span>
+              <span id="top-questions-stat" class="font-bold text-slate-200">0 / 0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Header Actions: SIH Jury Demo Fast-Track & Active Candidate -->
+        <div class="flex items-center space-x-3">
+          <div id="header-candidate-badge" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700 text-xs">
+            <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
+            <span id="header-candidate-name" class="font-semibold text-slate-200">Candidate</span>
+          </div>
+
+          <!-- SIH JURY FEATURE: Simulate 100% Completion -->
+          <button id="btn-jury-fast-track" onclick="simulateHundredPercentCompletion()" class="gold-shimmer px-4 py-2.5 rounded-xl shadow-lg shadow-amber-500/20 flex items-center gap-2 text-xs uppercase tracking-wider hover:brightness-110 active:scale-95 transition">
+            <i data-lucide="zap" class="w-4 h-4 text-amber-950 fill-amber-950"></i>
+            <span>Simulate 100% (SIH Jury)</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Navigation Tabs across 5 Phases -->
+      <div class="flex space-x-2 border-t border-slate-800/80 py-2.5 overflow-x-auto text-xs font-medium scrollbar-none">
+        <button id="nav-btn-onboarding" onclick="showPage('page-onboarding')" class="px-3.5 py-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-2 transition whitespace-nowrap">
+          <span class="w-5 h-5 rounded-full bg-emerald-500 text-slate-950 font-bold flex items-center justify-center text-[10px]">0</span>
+          Candidate Intake
+        </button>
+        <button id="nav-btn-phase1" onclick="showPage('page-phase1')" class="px-3.5 py-2 rounded-xl bg-slate-800/60 text-slate-400 hover:text-slate-200 border border-transparent flex items-center gap-2 transition whitespace-nowrap">
+          <span class="w-5 h-5 rounded-full bg-slate-700 text-slate-300 font-bold flex items-center justify-center text-[10px]">1</span>
+          Phase 1: Skill Heatmap
+        </button>
+        <button id="nav-btn-phase2" onclick="showPage('page-phase2')" class="px-3.5 py-2 rounded-xl bg-slate-800/60 text-slate-400 hover:text-slate-200 border border-transparent flex items-center gap-2 transition whitespace-nowrap">
+          <span class="w-5 h-5 rounded-full bg-slate-700 text-slate-300 font-bold flex items-center justify-center text-[10px]">2</span>
+          Phase 2: Roadmap & Practice
+        </button>
+        <button id="nav-btn-phase3" onclick="showPage('page-phase3')" class="px-3.5 py-2 rounded-xl bg-slate-800/60 text-slate-400 hover:text-slate-200 border border-transparent flex items-center gap-2 transition whitespace-nowrap">
+          <span class="w-5 h-5 rounded-full bg-slate-700 text-slate-300 font-bold flex items-center justify-center text-[10px]">3</span>
+          Phase 3: Opportunities & Internships
+        </button>
+        <button id="nav-btn-phase4" onclick="showPage('page-phase4')" class="px-3.5 py-2 rounded-xl bg-slate-800/60 text-slate-400 hover:text-slate-200 border border-transparent flex items-center gap-2 transition whitespace-nowrap">
+          <span class="w-5 h-5 rounded-full bg-slate-700 text-slate-300 font-bold flex items-center justify-center text-[10px]">4</span>
+          Phase 4: Live Jobs & Career Prep
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Problem Statement Ticker -->
+  <div class="bg-gradient-to-b from-slate-900 to-transparent border-b border-slate-800/50 py-2.5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 text-xs text-slate-400">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold uppercase tracking-wider text-[10px]">
+            SIH Problem Statement
+          </span>
+          <span class="text-slate-300 font-medium">
+            Bridging Industry-Academia Curriculum Mismatches via Real-Time Gemini AI Skill Alignment
+          </span>
+        </div>
+        <div class="flex items-center gap-3 text-[11px]">
+          <span class="flex items-center gap-1.5 text-emerald-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Gemini 3.6 Flash Engine Connected
+          </span>
+          <span class="text-slate-500">|</span>
+          <span class="text-slate-400">Ministry of Skill Development & AICTE</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN MULTI-PAGE APPLICATION CONTAINER -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- ========================================================================= -->
+    <!-- PAGE 0: CANDIDATE REGISTRATION / INTAKE WEBPAGE -->
+    <!-- ========================================================================= -->
+    <div id="page-onboarding" class="app-page active-page space-y-8">
+      <div class="glass-panel p-8 sm:p-12 rounded-3xl border border-slate-700/80 shadow-2xl relative overflow-hidden max-w-3xl mx-auto">
+        <div class="absolute -right-20 -top-20 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-20 -bottom-20 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="text-center max-w-xl mx-auto space-y-3">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
+            <i data-lucide="id-card" class="w-3.5 h-3.5"></i>
+            National Skill Passport Portal
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-black text-white tracking-tight">
+            Candidate Registration
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+            Welcome to KaushalSetu. Please register candidate details below to build your industry alignment profile and link your verified GitHub & LinkedIn credentials.
+          </p>
+        </div>
+
+        <form id="onboarding-form" onsubmit="handleOnboardingSubmit(event)" class="mt-8 space-y-6">
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <!-- Full Name -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Candidate Full Name <span class="text-rose-400">*</span></label>
+              <input type="text" id="reg-name" required placeholder="Enter your full name"
+                class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition text-sm">
+            </div>
+
+            <!-- Mobile Number -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Mobile Number <span class="text-rose-400">*</span></label>
+              <input type="tel" id="reg-mobile" required placeholder="e.g. +91 98765 43210"
+                class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition text-sm">
+            </div>
+
+            <!-- Email ID -->
+            <div class="md:col-span-2">
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Email Address <span class="text-rose-400">*</span></label>
+              <input type="email" id="reg-email" required placeholder="e.g. candidate@example.com"
+                class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition text-sm">
+            </div>
+
+            <!-- State -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">State of Residence <span class="text-rose-400">*</span></label>
+              <input type="text" id="reg-state" required placeholder="e.g. Gujarat / Maharashtra / Karnataka"
+                class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition text-sm">
+            </div>
+
+            <!-- City -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">City <span class="text-rose-400">*</span></label>
+              <input type="text" id="reg-city" required placeholder="e.g. Ahmedabad / Bengaluru / Pune"
+                class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition text-sm">
+            </div>
+
+            <!-- GitHub Profile -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">GitHub Profile URL <span class="text-rose-400">*</span></label>
+              <input type="url" id="reg-github" required placeholder="https://github.com/username"
+                class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition text-sm">
+            </div>
+
+            <!-- LinkedIn Profile -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">LinkedIn Profile URL <span class="text-rose-400">*</span></label>
+              <input type="url" id="reg-linkedin" required placeholder="https://linkedin.com/in/username"
+                class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition text-sm">
+            </div>
+          </div>
+
+          <div class="pt-4">
+            <button type="submit" class="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-blue-600 hover:from-emerald-400 hover:to-blue-500 text-white font-bold text-base shadow-xl shadow-emerald-500/25 flex items-center justify-center gap-3 transition transform active:scale-[0.99]">
+              <span>Save & Proceed to Phase 1: Skill Assessment</span>
+              <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- PAGE 1: PHASE 1 - SKILL ASSESSMENT & REAL-TIME HEATMAP WEBPAGE -->
+    <!-- ========================================================================= -->
+    <div id="page-phase1" class="app-page space-y-8">
+      
+      <!-- Assessment Form Card -->
+      <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-2xl relative overflow-hidden border border-slate-700/60">
+        <div class="max-w-3xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-3">
+            <i data-lucide="scan-face" class="w-3.5 h-3.5"></i>
+            Phase 1: Engineering Branch Alignment & Skill Assessment
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            Select Your Engineering Branch & Target Industry Domain
+          </h1>
+          <p class="mt-2 text-xs sm:text-sm text-slate-400">
+            Choose your academic engineering branch to see relevant industry roles. Gemini AI will benchmark your skills against real-time 2026 hiring demands.
+          </p>
+        </div>
+
+        <form id="assessment-form" onsubmit="handleAssessmentSubmit(event)" class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Engineering Branch Dropdown (Replaces Full Name) -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Select Engineering Branch <span class="text-rose-400">*</span></label>
+            <select id="input-branch" onchange="handleBranchChange()" class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 focus:outline-none focus:border-emerald-500 transition text-sm cursor-pointer">
+              <option value="Computer Science & Engineering">Computer Science & Engineering (CSE)</option>
+              <option value="Information Technology">Information Technology (IT)</option>
+              <option value="Artificial Intelligence & Data Science">Artificial Intelligence & Data Science</option>
+              <option value="Electronics & Communication Engineering">Electronics & Communication (ECE)</option>
+              <option value="Electrical & Electronics Engineering">Electrical & Electronics (EEE)</option>
+              <option value="Mechanical & Mechatronics">Mechanical & Mechatronics Engineering</option>
+              <option value="Civil / Other Engineering">Civil / Other Engineering Disciplines</option>
+            </select>
+          </div>
+
+          <!-- Target Industry Role/Domain (Cascading based on branch) -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Target Industry Role / Domain <span class="text-rose-400">*</span></label>
+            <select id="input-target-field" onchange="handleTargetFieldChange()" class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 focus:outline-none focus:border-emerald-500 transition text-sm cursor-pointer">
+              <!-- Populated dynamically based on branch -->
+            </select>
+          </div>
+
+          <!-- College / Institution (Empty, no prefill) -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">College / University <span class="text-rose-400">*</span></label>
+            <input type="text" id="input-college" required placeholder="Enter your college or university name"
+              class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition text-sm">
+          </div>
+
+          <!-- Experience Level -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Current Career Stage</label>
+            <select id="input-experience" class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 focus:outline-none focus:border-emerald-500 transition text-sm cursor-pointer">
+              <option value="Beginner / 1st-2nd Year Student">Beginner / 1st-2nd Year Engineering Student</option>
+              <option value="Pre-Final / Final Year Student" selected>Pre-Final / Final Year Engineering Student</option>
+              <option value="Recent Graduate / Looking for Job">Recent Graduate / Fresher Seeking Placement</option>
+              <option value="Intermediate / Upskilling">Intermediate Professional Upskilling</option>
+            </select>
+          </div>
+
+          <!-- Current Skills Selection & Tagging (Empty by default) -->
+          <div class="md:col-span-2">
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                Current Known Skills (Click tags to select or type custom below)
+              </label>
+              <span class="text-[11px] text-slate-400">Select all that you currently know</span>
+            </div>
+
+            <!-- Pre-defined skill chips -->
+            <div id="skills-chip-container" class="flex flex-wrap gap-2 mb-3"></div>
+
+            <!-- Custom skill tag input -->
+            <div class="flex gap-2">
+              <input type="text" id="input-custom-skill" placeholder="Type custom skill (e.g. GraphQL, Tailwind, Redis) and press Enter"
+                class="flex-grow px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition text-xs">
+              <button type="button" onclick="addCustomSkill()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition">
+                + Add Skill
+              </button>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="md:col-span-2 pt-2">
+            <button type="submit" id="btn-submit-assessment" class="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-blue-600 hover:from-emerald-400 hover:to-blue-500 text-white font-bold text-base shadow-xl shadow-emerald-500/25 flex items-center justify-center gap-3 transition transform active:scale-[0.99]">
+              <i data-lucide="sparkles" class="w-5 h-5"></i>
+              <span>Generate Real-Time Skill Heatmap & Gap Analysis</span>
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- Assessment Loading State Spinner -->
+      <div id="assessment-loader" class="hidden glass-panel p-12 rounded-3xl text-center space-y-4 border border-slate-700">
+        <div class="inline-block relative">
+          <div class="w-16 h-16 border-4 border-emerald-500/20 border-t-emerald-400 rounded-full animate-spin"></div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <i data-lucide="cpu" class="w-6 h-6 text-emerald-400 animate-pulse"></i>
+          </div>
+        </div>
+        <h3 class="text-xl font-bold text-white">Analyzing Against Real-Time Industry Demand...</h3>
+        <p class="text-sm text-slate-400 max-w-md mx-auto">
+          Querying Google Gemini AI with target industry benchmark criteria across real-time tech job postings.
+        </p>
+      </div>
+
+      <!-- REAL-TIME SKILL HEATMAP & GAP DASHBOARD CONTAINER -->
+      <div id="heatmap-dashboard" class="hidden space-y-8">
+        
+        <!-- Score Bar & Executive Summary -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Industry Match Gauge Card -->
+          <div class="glass-panel p-6 rounded-3xl border border-slate-700 flex flex-col items-center justify-center text-center relative overflow-hidden">
+            <div class="text-xs uppercase font-semibold tracking-wider text-slate-400 mb-2">Industry Alignment Score</div>
+            
+            <div class="relative w-40 h-40 flex items-center justify-center my-2">
+              <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="42" stroke="currentColor" stroke-width="8" class="text-slate-800" fill="transparent"/>
+                <circle id="gauge-circle" cx="50" cy="50" r="42" stroke="currentColor" stroke-width="8" stroke-linecap="round" class="text-emerald-400 transition-all duration-1000" fill="transparent" stroke-dasharray="264" stroke-dashoffset="264"/>
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span id="score-number" class="text-4xl font-black text-white">0%</span>
+                <span id="score-label" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">READINESS</span>
+              </div>
+            </div>
+
+            <div id="match-status-badge" class="mt-2 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+              Skill Gap Identified
+            </div>
+          </div>
+
+          <!-- Executive AI Summary -->
+          <div class="lg:col-span-2 glass-panel p-6 rounded-3xl border border-slate-700 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs uppercase font-semibold tracking-wider text-slate-400 flex items-center gap-1.5">
+                  <i data-lucide="bot" class="w-4 h-4 text-emerald-400"></i>
+                  Gemini AI Executive Evaluation
+                </span>
+                <span id="demand-level-pill" class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  Surging Demand
+                </span>
+              </div>
+              <h3 id="analysis-candidate-title" class="text-xl font-bold text-white mb-2">Assessment Results</h3>
+              <p id="analysis-summary-text" class="text-sm text-slate-300 leading-relaxed">
+                Loading evaluation summary...
+              </p>
+            </div>
+
+            <!-- Strengths & Gaps Highlights -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 pt-4 border-t border-slate-800">
+              <div class="bg-emerald-950/30 p-3 rounded-2xl border border-emerald-500/20">
+                <div class="text-xs font-bold text-emerald-400 flex items-center gap-1.5 mb-1.5">
+                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+                  Identified Strengths
+                </div>
+                <div id="strengths-tags" class="flex flex-wrap gap-1.5"></div>
+              </div>
+
+              <div class="bg-rose-950/30 p-3 rounded-2xl border border-rose-500/20">
+                <div class="text-xs font-bold text-rose-400 flex items-center gap-1.5 mb-1.5">
+                  <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i>
+                  Critical Industry Gaps
+                </div>
+                <div id="critical-gaps-tags" class="flex flex-wrap gap-1.5"></div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- SKILL MATCH BRANCHING LOGIC BANNER -->
+        <div id="branching-container" class="rounded-3xl p-6 transition-all duration-300"></div>
+
+        <!-- INTERACTIVE REAL-TIME SKILL HEATMAP MATRIX -->
+        <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-700 space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-semibold border border-blue-500/20 mb-2">
+                <i data-lucide="grid" class="w-3.5 h-3.5"></i>
+                Domain Skill Matrix
+              </div>
+              <h3 class="text-2xl font-black text-white">Real-Time Industry Skill Heatmap</h3>
+              <p class="text-xs text-slate-400">Comparing required industry market demand against candidate proficiency</p>
+            </div>
+
+            <!-- Heatmap Filter Controls -->
+            <div class="flex items-center gap-2">
+              <button onclick="filterHeatmap('all')" id="filter-all-btn" class="heatmap-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-200 border border-slate-700">All</button>
+              <button onclick="filterHeatmap('gap')" id="filter-gap-btn" class="heatmap-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 text-rose-400 border border-slate-800">Critical Gaps</button>
+              <button onclick="filterHeatmap('mastered')" id="filter-mastered-btn" class="heatmap-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 text-emerald-400 border border-slate-800">Mastered</button>
+            </div>
+          </div>
+
+          <div id="heatmap-category-tabs" class="flex space-x-2 border-b border-slate-800 pb-2 overflow-x-auto text-xs font-semibold scrollbar-none"></div>
+          <div id="heatmap-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- PAGE 2: PHASE 2 - LEARNING ROADMAP & PRACTICE HUB WEBPAGE -->
+    <!-- ========================================================================= -->
+    <div id="page-phase2" class="app-page space-y-8">
+      
+      <!-- Roadmap Header & Target Customizer -->
+      <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-700 relative overflow-hidden">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold mb-2">
+              <i data-lucide="map" class="w-3.5 h-3.5"></i>
+              Phase 2: AI-Powered Learning Roadmap & Practice Hub
+            </div>
+            <h2 id="roadmap-domain-title" class="text-2xl sm:text-3xl font-black text-white">Full Stack Industry Alignment Roadmap</h2>
+            <p id="roadmap-domain-desc" class="text-xs sm:text-sm text-slate-400 mt-1">
+              Curated modular curriculum bridging identified gaps with verified YouTube courses (rated 4.0-4.5/5), GitHub project blueprints, and direct LeetCode problem links.
+            </p>
+          </div>
+
+          <!-- Roadmap Configuration & Controls -->
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="bg-slate-900/90 border border-slate-700 px-4 py-2.5 rounded-2xl flex items-center gap-3 text-xs">
+              <span class="text-slate-400 font-medium">Weekly Duration:</span>
+              <span id="roadmap-estimated-weeks" class="font-bold text-emerald-400">8 Weeks</span>
+            </div>
+
+            <div class="bg-slate-900/90 border border-slate-700 px-4 py-2.5 rounded-2xl flex items-center gap-3 text-xs">
+              <span class="text-slate-400 font-medium">Daily Commitment:</span>
+              <span id="roadmap-daily-hours" class="font-bold text-blue-400">3 Hours / Day</span>
+            </div>
+
+            <button onclick="simulateHundredPercentCompletion()" class="gold-shimmer px-4 py-2.5 rounded-2xl text-xs uppercase tracking-wider font-bold flex items-center gap-2 shadow-lg shadow-amber-500/20 hover:brightness-110 active:scale-95 transition">
+              <i data-lucide="check-check" class="w-4 h-4"></i>
+              <span>Simulate 100% (Jury)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Target Customizer Form -->
+        <div class="mt-6 pt-6 border-t border-slate-800 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs">
+          <div>
+            <label class="block text-slate-400 font-semibold mb-1">Global Target Lectures</label>
+            <div class="flex items-center gap-2">
+              <input type="number" id="custom-target-lectures" min="10" max="200" value="98" onchange="updateCustomTargets()"
+                class="w-24 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-100 font-bold text-center focus:border-emerald-500 focus:outline-none">
+              <span class="text-slate-500">total video lectures</span>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-slate-400 font-semibold mb-1">Global Target Practice Questions</label>
+            <div class="flex items-center gap-2">
+              <input type="number" id="custom-target-questions" min="5" max="100" value="36" onchange="updateCustomTargets()"
+                class="w-24 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-100 font-bold text-center focus:border-emerald-500 focus:outline-none">
+              <span class="text-slate-500">LeetCode / coding questions</span>
+            </div>
+          </div>
+
+          <div class="sm:col-span-2 md:col-span-1 flex items-center justify-end">
+            <div class="bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-2xl flex items-center gap-2 text-emerald-400 font-bold">
+              <i data-lucide="trending-up" class="w-4 h-4"></i>
+              <span id="readiness-live-label">Industry Readiness: 38%</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Roadmap Loading Indicator -->
+      <div id="roadmap-loader" class="hidden glass-panel p-12 rounded-3xl text-center space-y-4 border border-slate-700">
+        <div class="w-12 h-12 border-4 border-blue-500/20 border-t-blue-400 rounded-full animate-spin mx-auto"></div>
+        <h3 class="text-lg font-bold text-white">Generating Tailored Multi-Stage Learning Roadmap...</h3>
+        <p class="text-xs text-slate-400">Selecting highly-rated courses (4.0 - 4.5/5), curated GitHub capstones, and direct LeetCode problem links.</p>
+      </div>
+
+      <!-- Modules Accordion List -->
+      <div id="roadmap-modules-container" class="space-y-6"></div>
+
+      <!-- Bottom Next Step CTA -->
+      <div class="flex justify-end pt-4">
+        <button onclick="showPage('page-phase3')" class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-blue-500/25 transition">
+          <span>Proceed to Phase 3: Opportunities & Internships</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- PAGE 3: PHASE 3 - OPPORTUNITIES & LIVE INTERNSHIPS WEBPAGE -->
+    <!-- ========================================================================= -->
+    <div id="page-phase3" class="app-page space-y-8">
+
+      <!-- LOCKED STATE OVERLAY (Visible when progress < 100%) -->
+      <div id="phase3-locked-card" class="glass-panel p-10 sm:p-14 rounded-3xl border border-slate-700 text-center space-y-6 relative overflow-hidden">
+        <div class="w-20 h-20 rounded-3xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mx-auto text-amber-400 shadow-xl shadow-amber-500/10">
+          <i data-lucide="lock" class="w-10 h-10"></i>
+        </div>
+        
+        <div class="max-w-xl mx-auto">
+          <span class="text-xs font-bold uppercase tracking-widest text-amber-400">Phase 3 Restricted Access</span>
+          <h2 class="text-2xl sm:text-3xl font-black text-white mt-1">Opportunities & Internships Gateway Locked</h2>
+          <p class="text-xs sm:text-sm text-slate-400 mt-2">
+            This gateway unlocks <span class="text-emerald-400 font-semibold">Live Hackathons</span>, <span class="text-blue-400 font-semibold">Elite Bootcamps</span>, and <span class="text-indigo-400 font-semibold">Verified Live Internships</span> once your roadmap reaches 100% completion.
+          </p>
+        </div>
+
+        <div class="max-w-md mx-auto bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2">
+          <div class="flex justify-between text-xs font-semibold">
+            <span class="text-slate-400">Required Milestone: 100% Completion</span>
+            <span id="locked-current-progress-text" class="text-amber-400 font-bold">Current: 0%</span>
+          </div>
+          <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+            <div id="locked-progress-bar" class="h-full bg-gradient-to-r from-blue-500 to-amber-400 rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- JURY INSTANT UNLOCK BUTTON -->
+        <div class="pt-2">
+          <button onclick="simulateHundredPercentCompletion()" class="gold-shimmer px-6 py-3.5 rounded-2xl text-xs uppercase font-extrabold tracking-wider inline-flex items-center gap-2 shadow-2xl hover:brightness-110 active:scale-95 transition">
+            <i data-lucide="unlock" class="w-4 h-4"></i>
+            <span>Simulate 100% Completion (SIH Jury Instant Unlock)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- UNLOCKED STATE CONTAINER (Visible when progress === 100%) -->
+      <div id="phase3-unlocked-card" class="hidden space-y-10">
+
+        <!-- Celebratory Completion Banner -->
+        <div class="glass-panel p-8 rounded-3xl border border-emerald-500/30 bg-gradient-to-r from-emerald-950/40 via-slate-900 to-blue-950/40 relative overflow-hidden">
+          <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center space-x-5 text-left">
+              <div class="w-16 h-16 rounded-2xl bg-emerald-500 text-slate-950 flex items-center justify-center font-black text-2xl shadow-xl shadow-emerald-500/30">
+                <i data-lucide="check-circle" class="w-9 h-9"></i>
+              </div>
+              <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 uppercase tracking-wider mb-1">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                  100% Industry Alignment Achieved
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-black text-white">Congratulations, Candidate! Phase 3 Unlocked.</h2>
+                <p class="text-xs text-slate-300 mt-1">
+                  Explore verified live hackathons, elite bootcamps, and top-tier software internships.
+                </p>
+              </div>
+            </div>
+
+            <button onclick="showPage('page-phase4')" class="px-5 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center gap-2 shadow-lg transition">
+              <span>Go to Phase 4: Live Jobs & Resume</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 1. Opportunities (Hackathons, Bootcamps, Summits) -->
+        <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-700 space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs font-semibold border border-amber-500/20 mb-2">
+                <i data-lucide="trophy" class="w-3.5 h-3.5"></i>
+                Competitive Opportunities & Bootcamps
+              </div>
+              <h3 class="text-2xl font-black text-white">Live Hackathons, Bootcamps & Tech Summits</h3>
+              <p class="text-xs text-slate-400">Put your newly acquired roadmap skills into national-level competitive challenges.</p>
+            </div>
+          </div>
+
+          <!-- Hackathons Grid -->
+          <div>
+            <h4 class="text-sm font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <i data-lucide="flame" class="w-4 h-4 text-rose-400"></i>
+              Flagship Hackathons Enrolling Now
+            </h4>
+            <div id="hackathons-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+          </div>
+
+          <!-- Bootcamps & Summits Split Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-800">
+            <div>
+              <h4 class="text-sm font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
+                <i data-lucide="book-open-check" class="w-4 h-4 text-blue-400"></i>
+                Advanced Elite Bootcamps (Direct Register Links)
+              </h4>
+              <div id="bootcamps-list" class="space-y-3"></div>
+            </div>
+
+            <div>
+              <h4 class="text-sm font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
+                <i data-lucide="calendar" class="w-4 h-4 text-emerald-400"></i>
+                Technical Summits & Conclaves
+              </h4>
+              <div id="summits-list" class="space-y-3"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Live Internships with 1-Click Apply -->
+        <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-700 space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/20 mb-2">
+                <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
+                Placement Gateway
+              </div>
+              <h3 class="text-2xl font-black text-white">Live Verified Tech Internships</h3>
+              <p class="text-xs text-slate-400">Direct hiring partner postings matching your 100% roadmap verified skillset.</p>
+            </div>
+
+            <div class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-2">
+              <i data-lucide="badge-check" class="w-4 h-4"></i>
+              <span>1-Click Fast-Track Enabled</span>
+            </div>
+          </div>
+
+          <div id="internships-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        </div>
+
+        <!-- Continue to Phase 4 CTA -->
+        <div class="flex justify-end pt-2">
+          <button onclick="showPage('page-phase4')" class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs flex items-center gap-2 shadow-xl shadow-emerald-500/20 transition">
+            <span>Proceed to Phase 4: Live Job Openings & Career Prep</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- PAGE 4: PHASE 4 - LIVE JOB OPENINGS & EMPLOYER CONNECT + CAREER PREP -->
+    <!-- ========================================================================= -->
+    <div id="page-phase4" class="app-page space-y-8">
+      
+      <!-- Phase 4 Header -->
+      <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-700 relative overflow-hidden">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-2">
+          <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
+          Phase 4: Live Job Openings & Employer Connect
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black text-white">Full-Time Tech Openings & Professional Career Suite</h2>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1">
+          Apply directly to live software engineering positions, audit your LinkedIn profile for recruiters, and export an ATS-tailored resume generated by Gemini AI.
+        </p>
+      </div>
+
+      <!-- 1. LIVE JOB OPENINGS & EMPLOYER CONNECT SECTION -->
+      <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-700 space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-semibold border border-blue-500/20 mb-2">
+              <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+              Employer Connect Network
+            </div>
+            <h3 class="text-2xl font-black text-white">Live Software Engineering Job Openings</h3>
+            <p class="text-xs text-slate-400">Verified full-time openings tailored to your target domain with in-app application submission.</p>
+          </div>
+
+          <button onclick="fetchLiveJobs()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 flex items-center gap-1.5 transition">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+            Refresh Jobs
+          </button>
+        </div>
+
+        <!-- Live Jobs Grid -->
+        <div id="live-jobs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      </div>
+
+      <!-- 2. CAREER PREP: LINKEDIN OPTIMIZATION & AI RESUME BUILDER -->
+      <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-700 space-y-8">
+        <div>
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-semibold border border-indigo-500/20 mb-2">
+            <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+            Career Optimization Suite
+          </div>
+          <h3 class="text-2xl font-black text-white">LinkedIn Optimization & Automated AI Resume Builder</h3>
+          <p class="text-xs text-slate-400">Personalized directly to your registered candidate profile and roadmap achievements.</p>
+        </div>
+
+        <!-- LinkedIn Optimization Checklist -->
+        <div class="bg-slate-900/70 p-6 rounded-2xl border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-[#0077b5] flex items-center justify-center text-white font-bold text-sm">in</div>
+              <h4 class="text-base font-bold text-white">Recruiter LinkedIn Optimization Audit</h4>
+            </div>
+            <span id="linkedin-progress-badge" class="text-xs font-bold text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2.5 py-1 rounded-full">
+              0 of 5 Completed
+            </span>
+          </div>
+
+          <div id="linkedin-checklist-container" class="space-y-2.5 text-xs"></div>
+        </div>
+
+        <!-- Automated AI Resume Builder Section -->
+        <div class="space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h4 class="text-xl font-black text-white flex items-center gap-2">
+                <i data-lucide="sparkles" class="w-5 h-5 text-emerald-400"></i>
+                Gemini Automated ATS Resume Engine
+              </h4>
+              <p class="text-xs text-slate-400">Crafted according to Google XYZ bullet point format with verified candidate credentials.</p>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button onclick="generateAiResume()" id="btn-regenerate-resume" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 flex items-center gap-1.5 transition">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                Generate / Refresh Resume
+              </button>
+              <button onclick="printResume()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold flex items-center gap-1.5 transition shadow-lg shadow-emerald-500/20">
+                <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+                Print / Export PDF
+              </button>
+            </div>
+          </div>
+
+          <!-- Resume Preview Document -->
+          <div id="resume-container" class="bg-slate-900 border border-slate-700 rounded-2xl p-6 sm:p-10 text-slate-200 space-y-6 shadow-2xl transition">
+            <div class="text-center py-8 text-slate-500 text-sm">
+              Click "Generate / Refresh Resume" to synthesize your mastered roadmap skills into a professional resume.
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODALS -->
+  <!-- ========================================================================= -->
+
+  <!-- IN-APP JOB APPLICATION MODAL (Phase 4) -->
+  <div id="modal-job-apply" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl relative">
+      <button onclick="closeModal('modal-job-apply')" class="absolute top-5 right-5 text-slate-400 hover:text-white transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div>
+        <span class="text-[10px] font-bold text-blue-400 uppercase tracking-wider bg-blue-500/10 px-2.5 py-0.5 rounded-full border border-blue-500/20">
+          Full-Time Job Application
+        </span>
+        <h3 id="modal-job-company" class="text-xl font-black text-white mt-1">Google India</h3>
+        <p id="modal-job-role" class="text-xs text-slate-400">Associate Cloud Software Engineer</p>
+      </div>
+
+      <form id="job-apply-form" onsubmit="submitJobApplication(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Candidate Name <span class="text-rose-400">*</span></label>
+          <input type="text" id="job-apply-name" required
+            class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Email Address <span class="text-rose-400">*</span></label>
+          <input type="email" id="job-apply-email" required
+            class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Resume Link (Google Drive / GitHub / Portfolio URL) <span class="text-rose-400">*</span></label>
+          <input type="url" id="job-apply-resume-link" required placeholder="https://drive.google.com/... or https://github.com/..."
+            class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Experience Level <span class="text-rose-400">*</span></label>
+          <select id="job-apply-experience" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs focus:outline-none focus:border-emerald-500">
+            <option value="Fresher / Final Year Graduate">Fresher / Final Year Graduate</option>
+            <option value="0 - 1 Years of Experience">0 - 1 Years of Experience</option>
+            <option value="1 - 3 Years of Experience">1 - 3 Years of Experience</option>
+          </select>
+        </div>
+
+        <div class="flex items-center gap-3 pt-2">
+          <button type="submit" class="flex-grow py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-blue-500/25 transition">
+            Submit Job Application
+          </button>
+          <button type="button" onclick="closeModal('modal-job-apply')" class="px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 1-Click Internship Apply Modal (Phase 3) -->
+  <div id="modal-apply" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl relative">
+      <button onclick="closeModal('modal-apply')" class="absolute top-5 right-5 text-slate-400 hover:text-white transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div>
+        <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+          Fast-Track Application
+        </span>
+        <h3 id="modal-apply-company" class="text-xl font-black text-white mt-1">Razorpay Technologies</h3>
+        <p id="modal-apply-role" class="text-xs text-slate-400">Full Stack Software Engineer Intern</p>
+      </div>
+
+      <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-800 space-y-2 text-xs">
+        <div class="flex justify-between">
+          <span class="text-slate-400">Candidate:</span>
+          <span id="modal-apply-name" class="text-slate-200 font-bold">Candidate</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-400">Verified SIH Readiness:</span>
+          <span class="text-emerald-400 font-bold">100% Completed</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-400">ATS Match Score:</span>
+          <span class="text-blue-400 font-bold">98% High Alignment</span>
+        </div>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 font-semibold mb-1">Email Address</label>
+          <input type="email" id="modal-apply-email"
+            class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs focus:outline-none focus:border-emerald-500">
+        </div>
+        <div>
+          <label class="block text-slate-400 font-semibold mb-1">Contact Phone</label>
+          <input type="tel" id="modal-apply-phone"
+            class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs focus:outline-none focus:border-emerald-500">
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 pt-2">
+        <button onclick="submitInternshipApplication()" class="flex-grow py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold text-xs shadow-lg shadow-emerald-500/25 transition">
+          Confirm 1-Click Submission
+        </button>
+        <button onclick="closeModal('modal-apply')" class="px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Success Confirmation Modal -->
+  <div id="modal-confirmation" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl text-center relative">
+      <div class="w-16 h-16 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto">
+        <i data-lucide="check" class="w-8 h-8"></i>
+      </div>
+      <div>
+        <h3 class="text-xl font-black text-white">Application Transmitted!</h3>
+        <p id="confirm-msg" class="text-xs text-slate-400 mt-1">
+          Your profile has been forwarded directly to the hiring engineering team with Priority Fast-Track status.
+        </p>
+      </div>
+
+      <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs text-left space-y-2">
+        <div class="flex justify-between">
+          <span class="text-slate-400">Application ID:</span>
+          <span id="confirm-app-id" class="font-mono text-emerald-400 font-bold">KS-JOB-489218</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-400">Status:</span>
+          <span class="text-blue-400 font-semibold">Under Direct Technical Review</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-400">Submission Time:</span>
+          <span id="confirm-time" class="text-slate-300">Just now</span>
+        </div>
+      </div>
+
+      <button onclick="closeModal('modal-confirmation')" class="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition">
+        Dismiss
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-2 pointer-events-none"></div>
+
+  <!-- Footer -->
+  <footer class="mt-auto border-t border-slate-800/80 bg-slate-950 py-6 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="font-bold text-slate-400">KaushalSetu</span>
+        <span>•</span>
+        <span>Smart India Hackathon (SIH) Prototype</span>
+        <span>•</span>
+        <span>Ministry of Skill Development & AICTE</span>
+      </div>
+      <div>
+        <span>Powered by Google Gemini (gemini-3.6-flash) Structured Output Architecture</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main JavaScript App -->
+  <script src="/js/app.js"></script>
+</body>
+</html>

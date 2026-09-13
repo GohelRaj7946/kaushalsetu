@@ -1,0 +1,196 @@
+/* KaushalSetu Custom CSS & Design System */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --primary-navy: #0b132b;
+  --secondary-navy: #1c2541;
+  --accent-saffron: #f59e0b;
+  --accent-emerald: #10b981;
+  --accent-blue: #3b82f6;
+  --accent-purple: #8b5cf6;
+  --accent-rose: #f43f5e;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: #080d1a;
+  color: #e2e8f0;
+  overflow-x: hidden;
+}
+
+code, pre, .mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Page Management */
+.app-page {
+  display: none;
+}
+
+.app-page.active-page {
+  display: block;
+  animation: pageFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes pageFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: rgba(17, 24, 39, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-card {
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(99, 102, 241, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+/* Heatmap Gradient Cells */
+.heatmap-cell-mastered {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.25));
+  border-left: 4px solid #10b981;
+}
+
+.heatmap-cell-practice {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.25));
+  border-left: 4px solid #f59e0b;
+}
+
+.heatmap-cell-gap {
+  background: linear-gradient(135deg, rgba(244, 63, 94, 0.15), rgba(225, 29, 72, 0.25));
+  border-left: 4px solid #f43f5e;
+}
+
+/* Shimmer animations */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.gold-shimmer {
+  background: linear-gradient(90deg, #d97706, #f59e0b, #fef3c7, #f59e0b, #d97706);
+  background-size: 200% auto;
+  animation: shimmer 3.5s linear infinite;
+  color: #000;
+  font-weight: 700;
+}
+
+.pulse-glow {
+  box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
+  animation: pulseGlow 2.5s infinite alternate;
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.25); }
+  100% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.6); }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0b1120;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Print Mount Target (Hidden in Screen View) */
+#print-mount-point {
+  display: none;
+}
+
+/* ========================================================================= */
+/* BULLETPROOF PRINT STYLES FOR CLEAN 1-2 PAGE ATS RESUME (NO BLANK PAGES)   */
+/* ========================================================================= */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm 14mm;
+  }
+
+  /* Completely eliminate screen elements from layout calculation */
+  html, body {
+    background: #ffffff !important;
+    color: #111827 !important;
+    font-size: 11pt !important;
+    line-height: 1.35 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  body > *:not(#print-mount-point) {
+    display: none !important;
+  }
+
+  #print-mount-point {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #111827 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  #print-mount-point * {
+    color: #111827 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  #print-mount-point .print-text-accent {
+    color: #047857 !important;
+    font-weight: bold !important;
+  }
+
+  #print-mount-point .print-border-b {
+    border-bottom: 1.5px solid #d1d5db !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 12px !important;
+  }
+
+  #print-mount-point .print-card {
+    border: 1px solid #e5e7eb !important;
+    padding: 8px !important;
+    border-radius: 6px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
