@@ -19,15 +19,19 @@ Candidate Details:
 - Experience Level: ${experienceLevel || 'Beginner'}
 
 INSTRUCTIONS:
-1. Conduct an accurate Skill Gap Analysis comparing current skills against top tier industry job requirements.
-2. Determine an Overall Skill Match Percentage (0-100).
-   - If candidate already possesses 75% or more of modern core & framework skills for the role, set branchingTrigger to "high_skill_match".
-   - Otherwise, set branchingTrigger to "low_skill_gap".
-3. Generate a comprehensive "Real-time Skill Heatmap" with 4-5 categories (Core Technologies, Advanced Frameworks, Cloud & DevOps, Engineering & Tools, Soft Skills).
-4. Each skill inside categories must have:
+1. Conduct an accurate Skill Gap Analysis comparing current skills against top tier industry job requirements for ${targetField}.
+2. CRITICAL CONSISTENCY REQUIREMENT:
+   - For every skill listed in Current Stated Skills (${Array.isArray(currentSkills) ? currentSkills.join(', ') : currentSkills || 'None'}), mark it as status: "Mastered", userProficiencyPercentage: 85-95, heatLevel: "high".
+   - For essential industry skills required for ${targetField} that the candidate did NOT state, mark them as status: "Critical Gap" (userProficiencyPercentage: 15-35, heatLevel: "critical-gap") or "Needs Practice" (userProficiencyPercentage: 50-65, heatLevel: "medium").
+   - All evaluated skills in the heatmap must strictly belong to ${targetField} domain.
+3. Determine an Overall Skill Match Percentage (0-100) reflecting the ratio of Mastered skills:
+   - If match score >= 70%, set branchingTrigger to "high_skill_match" and readinessStatus to "High Skill Match (Placement Ready)".
+   - Otherwise, set branchingTrigger to "low_skill_gap" and readinessStatus to "Skill Gap Identified".
+4. Generate a comprehensive "Real-time Skill Heatmap" with 4-5 categories directly relevant to ${targetField}.
+5. Each skill inside categories must have:
    - name: string
-   - demandPercentage: number (70 to 99 representing industry market demand)
-   - userProficiencyPercentage: number (estimated candidate readiness 10-100 based on their input)
+   - demandPercentage: number (75 to 98 representing industry market demand)
+   - userProficiencyPercentage: number (85-95 if in Current Stated Skills, 15-35 if gap)
    - status: "Mastered" | "Needs Practice" | "Critical Gap"
    - marketTrend: "Surging" | "High Demand" | "Stable"
    - heatLevel: "high" | "medium" | "critical-gap"

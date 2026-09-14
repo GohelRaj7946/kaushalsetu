@@ -86,18 +86,170 @@ const branchDomainMap = {
   ]
 };
 
-// Domain-specific preset skills for chips
+// Comprehensive Domain-Specific Benchmark Skills Map for All 24 Industry Roles
 const domainSkillsMap = {
-  'Full Stack Web Development': ['HTML', 'CSS', 'JavaScript', 'TypeScript', 'React.js', 'Next.js', 'Node.js', 'Express.js', 'PostgreSQL', 'MongoDB', 'Redis', 'Docker', 'Git', 'REST APIs', 'Tailwind CSS'],
-  'AI & Machine Learning Engineering': ['Python', 'NumPy', 'Pandas', 'Scikit-Learn', 'PyTorch', 'TensorFlow', 'LLMs / Prompting', 'LangChain', 'Hugging Face', 'Vector DBs', 'MLOps', 'Docker', 'Git'],
-  'Generative AI & LLM Systems': ['Python', 'LangChain', 'LlamaIndex', 'RAG Architecture', 'Vector Databases', 'Hugging Face', 'Fine-Tuning', 'FastAPI', 'Docker', 'Git'],
-  'Cloud Architecture & DevOps': ['Linux Shell', 'Docker', 'Kubernetes', 'AWS (EC2/S3)', 'Terraform', 'CI/CD Actions', 'Nginx', 'Prometheus', 'Grafana', 'Git', 'Networking Basics'],
-  'Cyber Security & Ethical Hacking': ['Networking (TCP/IP)', 'Linux Administration', 'Burp Suite', 'Wireshark', 'Python Scripting', 'OWASP Top 10', 'Penetration Testing', 'SIEM & SOC', 'Cryptography'],
-  'Data Engineering & Analytics': ['SQL', 'Python', 'Apache Spark', 'Kafka', 'Airflow', 'Snowflake / BigQuery', 'dbt', 'PostgreSQL', 'Data Warehousing', 'PowerBI'],
-  'Mobile App Development': ['Dart / Flutter', 'React Native', 'JavaScript', 'TypeScript', 'Mobile UI/UX', 'Firebase', 'REST APIs', 'State Management', 'App Store Deploy', 'Git'],
-  'Embedded Systems & IoT': ['C / Embedded C', 'C++', 'RTOS', 'ESP32 / Arduino', 'ARM Cortex', 'UART / I2C / SPI', 'MQTT', 'Circuit Prototyping', 'Linux Kernel'],
-  'VLSI & Hardware Architecture': ['Verilog / SystemVerilog', 'VHDL', 'Digital Electronics', 'FPGA Prototyping', 'Static Timing Analysis (STA)', 'Cadence Virtuoso', 'CMOS Design'],
-  'Robotics & Automation': ['ROS / ROS2', 'Python', 'C++', 'Control Systems', 'Kinematics', 'Computer Vision (OpenCV)', 'Gazebo Simulation', 'Sensors & Actuators']
+  'Full Stack Web Development': [
+    'HTML5 & Semantic Web', 'CSS3 & Responsive Design', 'JavaScript (ES6+)', 'TypeScript',
+    'React.js', 'Next.js (App Router)', 'Tailwind CSS', 'Node.js & Express',
+    'RESTful API Design', 'GraphQL', 'PostgreSQL', 'MongoDB',
+    'Prisma ORM', 'Redis Caching', 'Docker Containerization', 'Git & GitHub',
+    'CI/CD (GitHub Actions)', 'AWS (EC2 / S3)', 'System Design & Scalability',
+    'Data Structures & Algorithms', 'Unit Testing (Jest)'
+  ],
+  'AI & Machine Learning Engineering': [
+    'Python', 'Linear Algebra & Statistics', 'NumPy & Pandas', 'Scikit-Learn',
+    'PyTorch', 'TensorFlow', 'Computer Vision (OpenCV)', 'Natural Language Processing (NLP)',
+    'LLMs & Prompt Engineering', 'LangChain', 'Hugging Face Transformers', 'Vector Databases (Pinecone/Chroma)',
+    'Feature Engineering', 'MLOps & Model Tracking (MLflow)', 'FastAPI Model Serving',
+    'Docker Containerization', 'Git & GitHub', 'Data Structures & Algorithms'
+  ],
+  'Generative AI & LLM Systems': [
+    'Python', 'OpenAI / Gemini APIs', 'Prompt Engineering', 'LangChain',
+    'LlamaIndex', 'RAG Architecture', 'Vector Databases (Chroma/Pinecone)', 'Hugging Face Transformers',
+    'Fine-Tuning (LoRA / QLoRA)', 'FastAPI Backend', 'Embeddings & Semantic Search',
+    'Model Quantization (GGUF/AWQ)', 'Agentic Workflows', 'Docker Containerization', 'Git & GitHub'
+  ],
+  'Deep Learning & Computer Vision': [
+    'Python', 'PyTorch', 'TensorFlow / Keras', 'OpenCV',
+    'Convolutional Neural Networks (CNNs)', 'YOLO Object Detection', 'Image Segmentation (U-Net)',
+    'Vision Transformers (ViT)', 'GANs & Diffusion Models', 'CUDA & GPU Acceleration',
+    'ONNX Model Optimization', 'Transfer Learning', 'Docker Containerization', 'Git & GitHub'
+  ],
+  'MLOps & Model Deployment': [
+    'Python', 'Docker Containerization', 'Kubernetes (K8s)', 'MLflow',
+    'Kubeflow Pipelines', 'CI/CD for Machine Learning', 'DVC (Data Version Control)',
+    'AWS SageMaker', 'FastAPI / BentoML', 'Prometheus & Grafana',
+    'Model Monitoring & Drift Detection', 'Linux Administration', 'Git & GitHub'
+  ],
+  'Cloud Architecture & DevOps': [
+    'Linux Administration & Bash', 'Docker Containerization', 'Kubernetes (K8s)',
+    'AWS Core (EC2, S3, VPC, RDS)', 'Terraform (IaC)', 'GitHub Actions CI/CD',
+    'Jenkins Pipelines', 'Nginx & Reverse Proxies', 'Prometheus & Grafana Monitoring',
+    'Microservices Architecture', 'Networking (TCP/IP, DNS, SSL/TLS)', 'Git & GitHub',
+    'Ansible Configuration'
+  ],
+  'Cyber Security & Ethical Hacking': [
+    'Networking Protocols (TCP/IP, DNS)', 'Linux System Administration', 'Python & Bash Scripting',
+    'Wireshark & Packet Analysis', 'Burp Suite & Web App Security', 'OWASP Top 10 Vulnerabilities',
+    'Penetration Testing (Metasploit)', 'Cryptography & PKI', 'SIEM & SOC (Splunk / ELK)',
+    'Firewalls & IDS/IPS', 'Vulnerability Assessment (Nessus)', 'Identity & Access Management (IAM)'
+  ],
+  'Data Engineering & Analytics': [
+    'SQL & Advanced Query Optimization', 'Python', 'PostgreSQL',
+    'Data Warehousing (Snowflake / BigQuery)', 'Apache Spark (PySpark)', 'Apache Kafka (Event Streaming)',
+    'Apache Airflow', 'ETL / ELT Pipeline Design', 'dbt (data build tool)',
+    'Data Modeling & Star Schema', 'Pandas & Polars', 'PowerBI / Tableau',
+    'Docker Containerization', 'AWS S3 & Redshift'
+  ],
+  'Mobile App Development': [
+    'Dart & Flutter', 'React Native', 'JavaScript & TypeScript',
+    'Kotlin (Android)', 'Swift (iOS)', 'Mobile UI/UX Design',
+    'State Management (Riverpod / Redux)', 'Firebase (Auth, Firestore, FCM)',
+    'RESTful & GraphQL APIs', 'Local Storage (SQLite / Hive)', 'Push Notifications & Deep Linking',
+    'App Store & Play Store Deployment', 'Git & GitHub'
+  ],
+  'Embedded Systems & IoT': [
+    'C / Embedded C', 'C++', 'ARM Cortex Microcontrollers',
+    'STM32 Ecosystem', 'ESP32 & Arduino', 'FreeRTOS / Real-Time OS',
+    'Communication Protocols (UART, SPI, I2C)', 'Wireless Protocols (BLE, Wi-Fi, Zigbee)',
+    'MQTT & IoT Cloud Protocols', 'Circuit Prototyping & Schematics',
+    'Linux Kernel & Device Drivers', 'Oscilloscope & Logic Analyzers', 'Git & GitHub'
+  ],
+  'VLSI & Hardware Architecture': [
+    'Verilog HDL', 'SystemVerilog', 'VHDL',
+    'Digital Electronics & Logic Design', 'CMOS Circuit Design', 'FPGA Prototyping (Xilinx Vivado)',
+    'Static Timing Analysis (STA)', 'Cadence Virtuoso / EDA Tools', 'ASIC Design Flow',
+    'Computer Architecture (RISC-V)', 'RTL Verification & Testbenches', 'Physical Design & Layout'
+  ],
+  'Robotics & Automation': [
+    'ROS / ROS 2 (Robot Operating System)', 'Python', 'C++',
+    'Computer Vision (OpenCV)', 'Robot Kinematics & Dynamics', 'Path Planning & Navigation (SLAM)',
+    'Gazebo Simulation', 'Microcontrollers (STM32 / Arduino)', 'Sensors Integration (LiDAR, IMU)',
+    'Control Systems (PID / MPC)', 'Actuators & Motor Drivers', 'Git & GitHub'
+  ],
+  'Firmware & Microcontroller Engineering': [
+    'Embedded C', 'C++', 'Bare-Metal Programming',
+    'ARM Cortex Architecture', 'FreeRTOS', 'Custom Bootloader Development',
+    'Hardware Debugging (JTAG / SWD)', 'Low-Power Firmware Design',
+    'Peripherals & Drivers (DMA, Timer, ADC)', 'I2C / SPI / UART / CAN',
+    'Memory Management & Flash Programming', 'Git & GitHub'
+  ],
+  '5G & Wireless Networks': [
+    'Wireless Communication Principles', '5G Core & RAN Architecture',
+    'OFDM & Massive MIMO', 'RF Engineering Fundamentals', 'Network Protocols (TCP/IP, SCTP)',
+    'Wireshark Protocol Analysis', 'Software Defined Radio (SDR)', 'Open5GS / OpenAirInterface',
+    'Network Slicing & QoS', 'Linux Networking', 'Git & GitHub'
+  ],
+  'Electric Vehicle (EV) Powertrains': [
+    'EV Powertrain Architecture', 'Battery Management Systems (BMS)',
+    'Lithium-ion Cell Chemistry & SOC/SOH', 'Motor Drives (BLDC & PMSM)',
+    'MATLAB & Simulink Modeling', 'CAN Bus Automotive Communication',
+    'Power Electronics (Inverters / DC-DC)', 'Thermal Management Systems',
+    'Regenerative Braking Systems', 'High Voltage Safety Standards'
+  ],
+  'Power Systems & Smart Grids': [
+    'Power System Analysis & Load Flow', 'Smart Grid Architecture',
+    'Renewable Integration (Solar / Wind)', 'SCADA & Telemetry Systems',
+    'High Voltage Engineering', 'Power System Protection & Numerical Relays',
+    'MATLAB / ETAP Simulation', 'Microgrids & Distributed Generation',
+    'Power Quality Analysis', 'Substation Automation'
+  ],
+  'Industrial Automation & PLC': [
+    'PLC Programming (Ladder Logic, ST)', 'SCADA Systems (Wonderware / WinCC)',
+    'HMI Interface Design', 'Industrial Protocols (Modbus, Profinet, EtherCAT)',
+    'Variable Frequency Drives (VFDs)', 'Industrial Sensors & Transmitters',
+    'Pneumatics & Hydraulics', 'Safety Instrumented Systems (SIS)',
+    'Panel Wiring & Electrical Drawings', 'Mechatronics Integration'
+  ],
+  'Robotics & Mechatronics': [
+    'Mechatronics System Integration', 'ROS / ROS 2',
+    'Arduino & Raspberry Pi Embedded Systems', 'Sensor Fusion (IMU, Encoders, Ultrasonic)',
+    'CAD Modeling (SolidWorks / Fusion 360)', 'Actuators & Servo Control',
+    'MATLAB / Simulink Control Loops', 'C++ & Python Programming',
+    'Microcontroller Interfacing', 'PID Speed / Position Tuning'
+  ],
+  'Automotive Embedded Systems': [
+    'Embedded C / C++', 'AUTOSAR Architecture',
+    'CAN, LIN & FlexRay Protocols', 'ISO 26262 (Functional Safety)',
+    'Automotive SPICE (ASPICE)', 'Hardware-in-the-Loop (HIL) Testing',
+    'Vector CANoe / CANalyzer', 'Automotive Diagnostics (UDS / OBD-II)',
+    'Microcontrollers (Infineon AURIX / NXP)', 'Automotive Cybersecurity'
+  ],
+  'CAD/CAM Digital Manufacturing': [
+    'SolidWorks / CATIA 3D CAD Modeling', 'Geometric Dimensioning & Tolerancing (GD&T)',
+    'CNC Programming & G-Code / M-Code', 'Mastercam / CAM Toolpath Generation',
+    'Additive Manufacturing & 3D Printing', 'Finite Element Analysis (ANSYS / FEA)',
+    'Design for Manufacturing & Assembly (DFM/DFA)', 'Metrology & CMM Inspection',
+    'Sheet Metal & Injection Molding Design'
+  ],
+  'Computational Fluid Dynamics (CFD)': [
+    'Fluid Dynamics & Thermodynamics', 'ANSYS Fluent / CFX',
+    'OpenFOAM Open-Source CFD', 'Computational Meshing (ICEM / Fluent Meshing)',
+    'Turbulence Modeling (k-epsilon, k-omega)', 'Heat Transfer Analysis',
+    'Aerodynamics & External Flow', 'Post-Processing & Data Visualization',
+    'Multiphase Flow Simulation'
+  ],
+  'Smart City GIS & Infrastructure': [
+    'Geographic Information Systems (ArcGIS / QGIS)', 'Spatial Data Analysis & Geoprocessing',
+    'Remote Sensing & Satellite Image Processing', 'Python for Geospatial (GeoPandas, Shapely)',
+    'Urban Infrastructure Planning', 'IoT Smart Sensors & City Telemetry',
+    'AutoCAD Map 3D', 'Web GIS (Leaflet / Mapbox)',
+    'Cartographic Design & Surveying'
+  ],
+  'Construction Tech & BIM Modeling': [
+    'Autodesk Revit BIM Modeling', 'Navisworks Clash Detection & 4D Simulation',
+    'Construction Scheduling (Primavera P6)', 'AutoCAD Civil 3D',
+    'Structural Analysis (STAAD.Pro / ETABS)', 'Quantity Takeoff & Cost Estimation',
+    'Green Building Certification (LEED / GRIHA)', 'Drone Surveying & Site Photogrammetry',
+    'Site Safety & Quality Control'
+  ],
+  'Environmental Analytics & Monitoring': [
+    'Environmental Impact Assessment (EIA)', 'Air & Water Quality Sensor Monitoring',
+    'GIS Spatial Mapping for Environmental Data', 'Environmental Data Science (Python / R)',
+    'Pollution Dispersion Modeling (AERMOD)', 'Solid & Hazardous Waste Management',
+    'Water & Wastewater Treatment Design', 'Environmental Regulations & Compliance',
+    'Carbon Footprint & Sustainability Metrics'
+  ]
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -254,6 +406,35 @@ function handleTargetFieldChange() {
   // Clear previous skills when target domain changes
   state.candidate.currentSkills = [];
   renderSuggestedChips();
+  updateSkillsBadge();
+}
+
+function updateSkillsBadge() {
+  const badge = document.getElementById('skills-count-badge');
+  if (!badge) return;
+  const count = (state.candidate.currentSkills || []).length;
+  badge.innerText = `${count} selected`;
+  if (count > 0) {
+    badge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+  } else {
+    badge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-400 border border-slate-700';
+  }
+}
+
+function selectAllSkills() {
+  const targetField = state.candidate.targetField || 'Full Stack Web Development';
+  const availableSkills = domainSkillsMap[targetField] || domainSkillsMap['Full Stack Web Development'] || [];
+  state.candidate.currentSkills = [...new Set([...state.candidate.currentSkills, ...availableSkills])];
+  renderSuggestedChips();
+  updateSkillsBadge();
+  showToast(`Selected all ${availableSkills.length} benchmark skills for ${targetField}!`, 'info');
+}
+
+function clearAllSkills() {
+  state.candidate.currentSkills = [];
+  renderSuggestedChips();
+  updateSkillsBadge();
+  showToast('Cleared all selected skills.', 'info');
 }
 
 // Render Skill Chips (Start UNSELECTED by default)
@@ -265,6 +446,8 @@ function renderSuggestedChips() {
   const availableSkills = domainSkillsMap[targetField] || domainSkillsMap['Full Stack Web Development'];
 
   container.innerHTML = '';
+
+  // Render all benchmark domain skills
   availableSkills.forEach(skill => {
     const isSelected = state.candidate.currentSkills.includes(skill);
     const chip = document.createElement('button');
@@ -272,12 +455,26 @@ function renderSuggestedChips() {
     chip.onclick = () => toggleSkillChip(skill);
     chip.className = `px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 border ${
       isSelected
-        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm shadow-emerald-500/10'
+        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm shadow-emerald-500/10 scale-[1.02]'
         : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:border-slate-700 hover:text-slate-200'
     }`;
-    chip.innerHTML = `${skill} ${isSelected ? '<span class="text-emerald-400">✓</span>' : '+'}`;
+    chip.innerHTML = `${skill} ${isSelected ? '<span class="text-emerald-400 font-bold">✓</span>' : '<span class="text-slate-500">+</span>'}`;
     container.appendChild(chip);
   });
+
+  // Render any custom added skills that are not in the predefined map
+  state.candidate.currentSkills.forEach(customSkill => {
+    if (!availableSkills.includes(customSkill)) {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.onclick = () => toggleSkillChip(customSkill);
+      chip.className = 'px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 border bg-teal-500/20 text-teal-300 border-teal-500/40 shadow-sm shadow-teal-500/10';
+      chip.innerHTML = `${customSkill} <span class="text-teal-400 font-bold">✓</span>`;
+      container.appendChild(chip);
+    }
+  });
+
+  updateSkillsBadge();
 }
 
 function toggleSkillChip(skill) {
@@ -292,12 +489,13 @@ function toggleSkillChip(skill) {
 
 function addCustomSkill() {
   const input = document.getElementById('input-custom-skill');
+  if (!input) return;
   const val = input.value.trim();
   if (val && !state.candidate.currentSkills.includes(val)) {
     state.candidate.currentSkills.push(val);
     input.value = '';
     renderSuggestedChips();
-    showToast(`Added "${val}" to your skills!`, 'success');
+    showToast(`Added "${val}" to your current skills!`, 'success');
   }
 }
 
