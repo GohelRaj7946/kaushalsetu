@@ -83,7 +83,7 @@ function getFallbackRoadmap({ targetField }) {
             rating: 4.5,
             duration: '4h 15m',
             totalLectures: 14,
-            url: 'https://www.youtube.com/playlist?list=PLillGF-RfqbZ7s3t6ZInY3NjEOOX7hsBv',
+            url: 'https://www.youtube.com/results?search_query=freeCodeCamp+TypeScript+course+playlist',
             thumbnailTopic: 'TypeScript Architecture'
           },
           {
@@ -92,7 +92,7 @@ function getFallbackRoadmap({ targetField }) {
             rating: 4.4,
             duration: '3h 40m',
             totalLectures: 12,
-            url: 'https://www.youtube.com/playlist?list=PLillGF-RfqbYRpji8t4SxUkbhvfUc6NOK',
+            url: 'https://www.youtube.com/results?search_query=Traversy+Media+Node.js+Express+crash+course+playlist',
             thumbnailTopic: 'Node.js Express'
           }
         ],
@@ -135,7 +135,7 @@ function getFallbackRoadmap({ targetField }) {
             rating: 4.5,
             duration: '5h 10m',
             totalLectures: 18,
-            url: 'https://www.youtube.com/playlist?list=PLu71SKxNbfoBAaWGtn9GA2PTw0HO0tX1p',
+            url: 'https://www.youtube.com/results?search_query=Chai+aur+Code+Next.js+full+course+playlist',
             thumbnailTopic: 'Next.js App Router'
           },
           {
@@ -144,7 +144,7 @@ function getFallbackRoadmap({ targetField }) {
             rating: 4.3,
             duration: '2h 50m',
             totalLectures: 10,
-            url: 'https://www.youtube.com/playlist?list=PL0Zuz27SZ-6PrE9srvEn8jS35Vd20DGzM',
+            url: 'https://www.youtube.com/results?search_query=Dave+Gray+React+State+Management+playlist',
             thumbnailTopic: 'Modern React State'
           }
         ],
@@ -186,7 +186,7 @@ function getFallbackRoadmap({ targetField }) {
             rating: 4.5,
             duration: '3h 30m',
             totalLectures: 12,
-            url: 'https://www.youtube.com/playlist?list=PLQnljOFTspQXjD0TwzXW2XyK6zC2PqE5l',
+            url: 'https://www.youtube.com/results?search_query=Hussein+Nasser+PostgreSQL+database+course+playlist',
             thumbnailTopic: 'PostgreSQL Database'
           },
           {
@@ -238,7 +238,7 @@ function getFallbackRoadmap({ targetField }) {
             rating: 4.5,
             duration: '4h 45m',
             totalLectures: 16,
-            url: 'https://www.youtube.com/playlist?list=PLy7NrYWoggjwPggqtKDxwK0xA6z465rsJ',
+            url: 'https://www.youtube.com/results?search_query=TechWorld+with+Nana+Docker+Kubernetes+course+playlist',
             thumbnailTopic: 'Docker & Containers'
           },
           {
@@ -247,7 +247,7 @@ function getFallbackRoadmap({ targetField }) {
             rating: 4.4,
             duration: '2h 30m',
             totalLectures: 8,
-            url: 'https://www.youtube.com/playlist?list=PL9gnSGHSqcnqf3p9wD-wZp7_L5s7zR5xW',
+            url: 'https://www.youtube.com/results?search_query=Kunal+Kushwaha+DevOps+bootcamp+playlist',
             thumbnailTopic: 'DevOps & CI/CD'
           }
         ],

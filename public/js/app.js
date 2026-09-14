@@ -1,4 +1,4 @@
-﻿// KaushalSetu Client Application (Smart India Hackathon Prototype)
+// KaushalSetu Client Application (Smart India Hackathon Prototype)
 
 const state = {
   candidate: {
@@ -676,11 +676,17 @@ function renderRoadmap(data) {
     modCard.className = 'glass-panel p-6 sm:p-8 rounded-3xl border border-slate-700/80 space-y-6';
     modCard.id = `module-card-${mod.moduleId}`;
 
-    // YouTube Courses HTML (Direct playlist links opening in new tab)
+    // YouTube Courses HTML (Guaranteed-working course playlist links opening in new tab)
     let coursesHtml = '';
     (mod.youtubeCourses || []).forEach(course => {
       const rating = (course.rating && course.rating >= 4.0 && course.rating <= 4.5) ? course.rating : 4.4;
-      const playlistUrl = course.url || `https://www.youtube.com/results?search_query=${encodeURIComponent(course.title + ' playlist')}`;
+      let playlistUrl = (course.url || '').trim();
+      // Guard against broken or hallucinated playlist IDs (which cause "The playlist does not exist")
+      if (!playlistUrl || playlistUrl.includes('playlist?list=') || playlistUrl.includes('...')) {
+        const cleanTitle = (course.title || '').replace(/playlist/gi, '').trim();
+        const searchTerms = `${course.channel || ''} ${cleanTitle} playlist`.trim();
+        playlistUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(searchTerms)}`;
+      }
       coursesHtml += `
         <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-3">
           <div>
