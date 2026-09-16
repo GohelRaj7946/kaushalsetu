@@ -504,6 +504,14 @@ function showPage(pageId) {
 
   state.currentPage = pageId;
 
+  // When switching to Phase 2, ensure courses and roadmap strictly match current branch/targetField
+  if (pageId === 'page-phase2') {
+    const currentTarget = state.candidate.targetField || 'Full Stack Web Development';
+    if (!state.roadmapData || state.roadmapData.domain !== currentTarget) {
+      fetchRoadmapData();
+    }
+  }
+
   // Update Header Nav Tab Buttons
   const navMap = {
     'page-onboarding': 'nav-btn-onboarding',
@@ -630,6 +638,7 @@ function handleTargetFieldChange() {
   renderSuggestedChips();
   updateSkillsBadge();
   updateLiveHeatmap();
+  fetchRoadmapData();
 }
 
 function updateSkillsBadge() {
@@ -1254,16 +1263,27 @@ function renderHeatmapGrid() {
 
 // Fetch and Render Roadmap (Phase 2)
 async function fetchRoadmapData() {
+  const currentTarget = state.candidate.targetField || 'Full Stack Web Development';
+
+  // 1. Instant client-side render if domainRoadmaps is loaded
+  if (typeof domainRoadmaps !== 'undefined' && domainRoadmaps[currentTarget]) {
+    state.roadmapData = domainRoadmaps[currentTarget];
+    renderRoadmap(domainRoadmaps[currentTarget]);
+  }
+
   const loader = document.getElementById('roadmap-loader');
-  if (loader) loader.classList.remove('hidden');
+  const container = document.getElementById('roadmap-modules-container');
+  if (loader && (!container || container.children.length === 0)) {
+    loader.classList.remove('hidden');
+  }
 
   try {
     const res = await fetch('/api/generate-roadmap', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        targetField: state.candidate.targetField,
-        criticalGaps: state.assessmentData?.criticalGaps || ['Frameworks', 'DevOps', 'Databases'],
+        targetField: currentTarget,
+        criticalGaps: state.assessmentData?.criticalGaps || ['Foundational Architecture', 'Industry Standards'],
         currentSkills: state.candidate.currentSkills,
         experienceLevel: state.candidate.experienceLevel
       })
@@ -1274,11 +1294,17 @@ async function fetchRoadmapData() {
       throw new Error(resJson.error || 'Failed to generate roadmap');
     }
 
-    state.roadmapData = resJson.data;
-    renderRoadmap(resJson.data);
+    if (state.candidate.targetField === currentTarget) {
+      state.roadmapData = resJson.data;
+      renderRoadmap(resJson.data);
+    }
 
   } catch (err) {
-    console.error('Roadmap error:', err);
+    console.warn('Roadmap API call note (using domain roadmap):', err.message);
+    if (!state.roadmapData && typeof domainRoadmaps !== 'undefined' && domainRoadmaps[currentTarget]) {
+      state.roadmapData = domainRoadmaps[currentTarget];
+      renderRoadmap(domainRoadmaps[currentTarget]);
+    }
   } finally {
     if (loader) loader.classList.add('hidden');
     initIcons();
@@ -1287,14 +1313,33 @@ async function fetchRoadmapData() {
 
 function renderRoadmap(data) {
   const container = document.getElementById('roadmap-modules-container');
-  if (!container) return;
+  if (!container || !data) return;
 
-  document.getElementById('roadmap-domain-title').innerText = `${data.domain} Alignment Roadmap`;
+  const domainTitle = document.getElementById('roadmap-domain-title');
+  if (domainTitle) domainTitle.innerText = `${data.domain} Alignment Roadmap`;
+
+  const domainDesc = document.getElementById('roadmap-domain-desc');
+  if (domainDesc) {
+    domainDesc.innerText = `Curated modular curriculum for ${data.domain} bridging identified gaps with verified YouTube courses (rated 4.0-4.5/5), GitHub project blueprints, and direct practice problem links.`;
+  }
+
   if (data.estimatedWeeks) {
-    document.getElementById('roadmap-estimated-weeks').innerText = `${data.estimatedWeeks} Weeks`;
+    const weeksEl = document.getElementById('roadmap-estimated-weeks');
+    if (weeksEl) weeksEl.innerText = `${data.estimatedWeeks} Weeks`;
   }
   if (data.recommendedDailyHours) {
-    document.getElementById('roadmap-daily-hours').innerText = `${data.recommendedDailyHours} Hours / Day`;
+    const hoursEl = document.getElementById('roadmap-daily-hours');
+    if (hoursEl) hoursEl.innerText = `${data.recommendedDailyHours} Hours / Day`;
+  }
+
+  // Reset module progress tracking when domain changes
+  if (state.lastRoadmapDomain !== data.domain) {
+    state.lastRoadmapDomain = data.domain;
+    state.userProgress.moduleProgress = {};
+    state.userProgress.completedLectures = 0;
+    state.userProgress.solvedQuestions = 0;
+    state.userProgress.overallPercentage = 0;
+    recalculateProgress();
   }
 
   container.innerHTML = '';

@@ -92,7 +92,7 @@ REQUIREMENTS:
    - durationWeeks: string (e.g., "2 Weeks")
    - difficulty: "Beginner" | "Intermediate" | "Advanced"
    - coreTopics: array of 3-4 strings
-   - youtubeCourses: 2 high-quality YouTube tutorial recommendations. All ratings must be between 4.0 and 4.5 out of 5, with recognized instructors/channels (freeCodeCamp, Traversy Media, Chai aur Code, Kunal Kushwaha), duration, and url pointing to a guaranteed YouTube search query (e.g., https://www.youtube.com/results?search_query=freeCodeCamp+TypeScript+course+playlist). Never output fake 'playlist?list=' IDs.
+   - youtubeCourses: 2 high-quality YouTube tutorial recommendations. All ratings must be between 4.0 and 4.5 out of 5, with recognized domain instructors/channels (NPTEL, freeCodeCamp, MIT OpenCourseWare, Edureka, RealPars, FastBit, etc.), duration, and url pointing to a guaranteed YouTube search query tailored specifically to ${targetField} (e.g., https://www.youtube.com/results?search_query=${encodeURIComponent(targetField)}+course+playlist). Never output fake 'playlist?list=' IDs.
    - githubProjects: 1 practical production-ready project blueprint with title, description, keyFeatures array, techStack array, and repoIdea.
    - leetCodePractice: { topic: string, targetCount: number, difficulty: string, problems: [{ title: string, url: string, difficulty: string }] } with 4-5 real clickable LeetCode problem links!
    - totalLecturesTarget: number
@@ -118,7 +118,7 @@ Return ONLY valid JSON matching this schema:
           "rating": 4.4,
           "duration": "4h 20m",
           "totalLectures": 16,
-          "url": "https://www.youtube.com/results?search_query=freeCodeCamp+TypeScript+course+playlist",
+          "url": "https://www.youtube.com/results?search_query=${encodeURIComponent(targetField)}+full+course+playlist",
           "thumbnailTopic": "string"
         }
       ],
