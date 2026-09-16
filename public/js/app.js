@@ -21,7 +21,8 @@ const state = {
   liveJobs: [],
   resumeData: null,
   activeHeatmapFilter: 'all',
-  activeHeatmapCategory: 0,
+  activeHeatmapCategory: -1,
+  lastRenderedDomain: null,
   userProgress: {
     targetLectures: 98,
     completedLectures: 0,
@@ -86,171 +87,392 @@ const branchDomainMap = {
   ]
 };
 
-// Comprehensive Domain-Specific Benchmark Skills Map for All 24 Industry Roles
-const domainSkillsMap = {
+// Comprehensive Domain-Specific Benchmark Topics & Skills for All 24 Industry Roles
+const domainBenchmarks = {
   'Full Stack Web Development': [
-    'HTML5 & Semantic Web', 'CSS3 & Responsive Design', 'JavaScript (ES6+)', 'TypeScript',
-    'React.js', 'Next.js (App Router)', 'Tailwind CSS', 'Node.js & Express',
-    'RESTful API Design', 'GraphQL', 'PostgreSQL', 'MongoDB',
-    'Prisma ORM', 'Redis Caching', 'Docker Containerization', 'Git & GitHub',
-    'CI/CD (GitHub Actions)', 'AWS (EC2 / S3)', 'System Design & Scalability',
-    'Data Structures & Algorithms', 'Unit Testing (Jest)'
+    {
+      categoryName: 'Core Languages & Foundations',
+      skills: ['HTML5 & Semantic Web', 'CSS3 & Responsive Design', 'JavaScript (ES6+)', 'TypeScript', 'Data Structures & Algorithms']
+    },
+    {
+      categoryName: 'Frontend Frameworks & UI',
+      skills: ['React.js', 'Next.js (App Router)', 'Tailwind CSS']
+    },
+    {
+      categoryName: 'Backend & API Engineering',
+      skills: ['Node.js & Express', 'RESTful API Design', 'GraphQL']
+    },
+    {
+      categoryName: 'Databases & Distributed Caching',
+      skills: ['PostgreSQL', 'MongoDB', 'Prisma ORM', 'Redis Caching']
+    },
+    {
+      categoryName: 'Cloud, DevOps & System Design',
+      skills: ['Docker Containerization', 'Git & GitHub', 'CI/CD (GitHub Actions)', 'AWS (EC2 / S3)', 'System Design & Scalability', 'Unit Testing (Jest)']
+    }
   ],
   'AI & Machine Learning Engineering': [
-    'Python', 'Linear Algebra & Statistics', 'NumPy & Pandas', 'Scikit-Learn',
-    'PyTorch', 'TensorFlow', 'Computer Vision (OpenCV)', 'Natural Language Processing (NLP)',
-    'LLMs & Prompt Engineering', 'LangChain', 'Hugging Face Transformers', 'Vector Databases (Pinecone/Chroma)',
-    'Feature Engineering', 'MLOps & Model Tracking (MLflow)', 'FastAPI Model Serving',
-    'Docker Containerization', 'Git & GitHub', 'Data Structures & Algorithms'
+    {
+      categoryName: 'Foundations & Mathematical Core',
+      skills: ['Python', 'Linear Algebra & Statistics', 'NumPy & Pandas', 'Data Structures & Algorithms']
+    },
+    {
+      categoryName: 'Core Machine Learning & Deep Learning',
+      skills: ['Scikit-Learn', 'PyTorch', 'TensorFlow', 'Feature Engineering']
+    },
+    {
+      categoryName: 'Computer Vision & NLP',
+      skills: ['Computer Vision (OpenCV)', 'Natural Language Processing (NLP)', 'LLMs & Prompt Engineering']
+    },
+    {
+      categoryName: 'Modern GenAI & Vector Retrieval',
+      skills: ['LangChain', 'Hugging Face Transformers', 'Vector Databases (Pinecone/Chroma)']
+    },
+    {
+      categoryName: 'MLOps & Model Production',
+      skills: ['MLOps & Model Tracking (MLflow)', 'FastAPI Model Serving', 'Docker Containerization', 'Git & GitHub']
+    }
   ],
   'Generative AI & LLM Systems': [
-    'Python', 'OpenAI / Gemini APIs', 'Prompt Engineering', 'LangChain',
-    'LlamaIndex', 'RAG Architecture', 'Vector Databases (Chroma/Pinecone)', 'Hugging Face Transformers',
-    'Fine-Tuning (LoRA / QLoRA)', 'FastAPI Backend', 'Embeddings & Semantic Search',
-    'Model Quantization (GGUF/AWQ)', 'Agentic Workflows', 'Docker Containerization', 'Git & GitHub'
+    {
+      categoryName: 'Core AI & API Foundations',
+      skills: ['Python', 'OpenAI / Gemini APIs', 'Prompt Engineering']
+    },
+    {
+      categoryName: 'Agentic Frameworks & Retrieval',
+      skills: ['LangChain', 'LlamaIndex', 'RAG Architecture', 'Vector Databases (Chroma/Pinecone)']
+    },
+    {
+      categoryName: 'Model Fine-Tuning & Open Weights',
+      skills: ['Hugging Face Transformers', 'Fine-Tuning (LoRA / QLoRA)', 'Embeddings & Semantic Search']
+    },
+    {
+      categoryName: 'Optimization & Serving',
+      skills: ['FastAPI Backend', 'Model Quantization (GGUF/AWQ)', 'Agentic Workflows', 'Docker Containerization', 'Git & GitHub']
+    }
   ],
   'Deep Learning & Computer Vision': [
-    'Python', 'PyTorch', 'TensorFlow / Keras', 'OpenCV',
-    'Convolutional Neural Networks (CNNs)', 'YOLO Object Detection', 'Image Segmentation (U-Net)',
-    'Vision Transformers (ViT)', 'GANs & Diffusion Models', 'CUDA & GPU Acceleration',
-    'ONNX Model Optimization', 'Transfer Learning', 'Docker Containerization', 'Git & GitHub'
+    {
+      categoryName: 'Core Frameworks & Tools',
+      skills: ['Python', 'PyTorch', 'TensorFlow / Keras', 'OpenCV']
+    },
+    {
+      categoryName: 'Vision Architectures',
+      skills: ['Convolutional Neural Networks (CNNs)', 'YOLO Object Detection', 'Image Segmentation (U-Net)', 'Vision Transformers (ViT)']
+    },
+    {
+      categoryName: 'Generative & Hardware Acceleration',
+      skills: ['GANs & Diffusion Models', 'CUDA & GPU Acceleration', 'ONNX Model Optimization', 'Transfer Learning', 'Docker Containerization', 'Git & GitHub']
+    }
   ],
   'MLOps & Model Deployment': [
-    'Python', 'Docker Containerization', 'Kubernetes (K8s)', 'MLflow',
-    'Kubeflow Pipelines', 'CI/CD for Machine Learning', 'DVC (Data Version Control)',
-    'AWS SageMaker', 'FastAPI / BentoML', 'Prometheus & Grafana',
-    'Model Monitoring & Drift Detection', 'Linux Administration', 'Git & GitHub'
+    {
+      categoryName: 'Core Programming & Infrastructure',
+      skills: ['Python', 'Linux Administration', 'Git & GitHub']
+    },
+    {
+      categoryName: 'Containerization & Orchestration',
+      skills: ['Docker Containerization', 'Kubernetes (K8s)', 'FastAPI / BentoML']
+    },
+    {
+      categoryName: 'Pipeline & Lifecycle Management',
+      skills: ['MLflow', 'Kubeflow Pipelines', 'CI/CD for Machine Learning', 'DVC (Data Version Control)']
+    },
+    {
+      categoryName: 'Cloud & Observability',
+      skills: ['AWS SageMaker', 'Prometheus & Grafana', 'Model Monitoring & Drift Detection']
+    }
   ],
   'Cloud Architecture & DevOps': [
-    'Linux Administration & Bash', 'Docker Containerization', 'Kubernetes (K8s)',
-    'AWS Core (EC2, S3, VPC, RDS)', 'Terraform (IaC)', 'GitHub Actions CI/CD',
-    'Jenkins Pipelines', 'Nginx & Reverse Proxies', 'Prometheus & Grafana Monitoring',
-    'Microservices Architecture', 'Networking (TCP/IP, DNS, SSL/TLS)', 'Git & GitHub',
-    'Ansible Configuration'
+    {
+      categoryName: 'Linux & Networking Basics',
+      skills: ['Linux Administration & Bash', 'Networking (TCP/IP, DNS, SSL/TLS)', 'Git & GitHub']
+    },
+    {
+      categoryName: 'Containers & Microservices',
+      skills: ['Docker Containerization', 'Kubernetes (K8s)', 'Microservices Architecture', 'Nginx & Reverse Proxies']
+    },
+    {
+      categoryName: 'Infrastructure as Code & Cloud',
+      skills: ['AWS Core (EC2, S3, VPC, RDS)', 'Terraform (IaC)', 'Ansible Configuration']
+    },
+    {
+      categoryName: 'CI/CD & Observability',
+      skills: ['GitHub Actions CI/CD', 'Jenkins Pipelines', 'Prometheus & Grafana Monitoring']
+    }
   ],
   'Cyber Security & Ethical Hacking': [
-    'Networking Protocols (TCP/IP, DNS)', 'Linux System Administration', 'Python & Bash Scripting',
-    'Wireshark & Packet Analysis', 'Burp Suite & Web App Security', 'OWASP Top 10 Vulnerabilities',
-    'Penetration Testing (Metasploit)', 'Cryptography & PKI', 'SIEM & SOC (Splunk / ELK)',
-    'Firewalls & IDS/IPS', 'Vulnerability Assessment (Nessus)', 'Identity & Access Management (IAM)'
+    {
+      categoryName: 'Networking & Systems Security',
+      skills: ['Networking Protocols (TCP/IP, DNS)', 'Linux System Administration', 'Python & Bash Scripting']
+    },
+    {
+      categoryName: 'Packet Analysis & Web Defense',
+      skills: ['Wireshark & Packet Analysis', 'Burp Suite & Web App Security', 'OWASP Top 10 Vulnerabilities']
+    },
+    {
+      categoryName: 'Offensive Security & Pen-testing',
+      skills: ['Penetration Testing (Metasploit)', 'Cryptography & PKI', 'Vulnerability Assessment (Nessus)']
+    },
+    {
+      categoryName: 'Enterprise Defense & Operations',
+      skills: ['SIEM & SOC (Splunk / ELK)', 'Firewalls & IDS/IPS', 'Identity & Access Management (IAM)']
+    }
   ],
   'Data Engineering & Analytics': [
-    'SQL & Advanced Query Optimization', 'Python', 'PostgreSQL',
-    'Data Warehousing (Snowflake / BigQuery)', 'Apache Spark (PySpark)', 'Apache Kafka (Event Streaming)',
-    'Apache Airflow', 'ETL / ELT Pipeline Design', 'dbt (data build tool)',
-    'Data Modeling & Star Schema', 'Pandas & Polars', 'PowerBI / Tableau',
-    'Docker Containerization', 'AWS S3 & Redshift'
+    {
+      categoryName: 'Relational & Analytical SQL',
+      skills: ['SQL & Advanced Query Optimization', 'PostgreSQL', 'Pandas & Polars']
+    },
+    {
+      categoryName: 'Big Data & Distributed Computing',
+      skills: ['Apache Spark (PySpark)', 'Apache Kafka (Event Streaming)', 'Data Warehousing (Snowflake / BigQuery)']
+    },
+    {
+      categoryName: 'Orchestration & Transformation',
+      skills: ['Apache Airflow', 'ETL / ELT Pipeline Design', 'dbt (data build tool)', 'Data Modeling & Star Schema']
+    },
+    {
+      categoryName: 'BI & Cloud Infrastructure',
+      skills: ['Python', 'PowerBI / Tableau', 'Docker Containerization', 'AWS S3 & Redshift']
+    }
   ],
   'Mobile App Development': [
-    'Dart & Flutter', 'React Native', 'JavaScript & TypeScript',
-    'Kotlin (Android)', 'Swift (iOS)', 'Mobile UI/UX Design',
-    'State Management (Riverpod / Redux)', 'Firebase (Auth, Firestore, FCM)',
-    'RESTful & GraphQL APIs', 'Local Storage (SQLite / Hive)', 'Push Notifications & Deep Linking',
-    'App Store & Play Store Deployment', 'Git & GitHub'
+    {
+      categoryName: 'Cross-Platform Frameworks',
+      skills: ['Dart & Flutter', 'React Native', 'JavaScript & TypeScript']
+    },
+    {
+      categoryName: 'Native Platforms & UI/UX',
+      skills: ['Kotlin (Android)', 'Swift (iOS)', 'Mobile UI/UX Design']
+    },
+    {
+      categoryName: 'State & Backend Integration',
+      skills: ['State Management (Riverpod / Redux)', 'Firebase (Auth, Firestore, FCM)', 'RESTful & GraphQL APIs', 'Local Storage (SQLite / Hive)']
+    },
+    {
+      categoryName: 'Deployment & Mobile DevOps',
+      skills: ['Push Notifications & Deep Linking', 'App Store & Play Store Deployment', 'Git & GitHub']
+    }
   ],
   'Embedded Systems & IoT': [
-    'C / Embedded C', 'C++', 'ARM Cortex Microcontrollers',
-    'STM32 Ecosystem', 'ESP32 & Arduino', 'FreeRTOS / Real-Time OS',
-    'Communication Protocols (UART, SPI, I2C)', 'Wireless Protocols (BLE, Wi-Fi, Zigbee)',
-    'MQTT & IoT Cloud Protocols', 'Circuit Prototyping & Schematics',
-    'Linux Kernel & Device Drivers', 'Oscilloscope & Logic Analyzers', 'Git & GitHub'
+    {
+      categoryName: 'Core Hardware & Microcontrollers',
+      skills: ['C / Embedded C', 'C++', 'ARM Cortex Microcontrollers', 'STM32 Ecosystem', 'ESP32 & Arduino']
+    },
+    {
+      categoryName: 'Real-Time OS & Interfacing',
+      skills: ['FreeRTOS / Real-Time OS', 'Communication Protocols (UART, SPI, I2C)', 'Circuit Prototyping & Schematics', 'Oscilloscope & Logic Analyzers']
+    },
+    {
+      categoryName: 'Wireless & IoT Protocols',
+      skills: ['Wireless Protocols (BLE, Wi-Fi, Zigbee)', 'MQTT & IoT Cloud Protocols', 'Linux Kernel & Device Drivers', 'Git & GitHub']
+    }
   ],
   'VLSI & Hardware Architecture': [
-    'Verilog HDL', 'SystemVerilog', 'VHDL',
-    'Digital Electronics & Logic Design', 'CMOS Circuit Design', 'FPGA Prototyping (Xilinx Vivado)',
-    'Static Timing Analysis (STA)', 'Cadence Virtuoso / EDA Tools', 'ASIC Design Flow',
-    'Computer Architecture (RISC-V)', 'RTL Verification & Testbenches', 'Physical Design & Layout'
+    {
+      categoryName: 'HDL & Digital Logic',
+      skills: ['Verilog HDL', 'SystemVerilog', 'VHDL', 'Digital Electronics & Logic Design', 'CMOS Circuit Design']
+    },
+    {
+      categoryName: 'Verification & Timing Analysis',
+      skills: ['FPGA Prototyping (Xilinx Vivado)', 'Static Timing Analysis (STA)', 'RTL Verification & Testbenches']
+    },
+    {
+      categoryName: 'EDA Tools & Architecture',
+      skills: ['Cadence Virtuoso / EDA Tools', 'ASIC Design Flow', 'Computer Architecture (RISC-V)', 'Physical Design & Layout']
+    }
   ],
   'Robotics & Automation': [
-    'ROS / ROS 2 (Robot Operating System)', 'Python', 'C++',
-    'Computer Vision (OpenCV)', 'Robot Kinematics & Dynamics', 'Path Planning & Navigation (SLAM)',
-    'Gazebo Simulation', 'Microcontrollers (STM32 / Arduino)', 'Sensors Integration (LiDAR, IMU)',
-    'Control Systems (PID / MPC)', 'Actuators & Motor Drivers', 'Git & GitHub'
+    {
+      categoryName: 'Robotic Operating Systems & Control',
+      skills: ['ROS / ROS 2 (Robot Operating System)', 'Python', 'C++', 'Control Systems (PID / MPC)']
+    },
+    {
+      categoryName: 'Perception & Simulation',
+      skills: ['Computer Vision (OpenCV)', 'Gazebo Simulation', 'Sensors Integration (LiDAR, IMU)']
+    },
+    {
+      categoryName: 'Navigation & Actuation',
+      skills: ['Robot Kinematics & Dynamics', 'Path Planning & Navigation (SLAM)', 'Microcontrollers (STM32 / Arduino)', 'Actuators & Motor Drivers', 'Git & GitHub']
+    }
   ],
   'Firmware & Microcontroller Engineering': [
-    'Embedded C', 'C++', 'Bare-Metal Programming',
-    'ARM Cortex Architecture', 'FreeRTOS', 'Custom Bootloader Development',
-    'Hardware Debugging (JTAG / SWD)', 'Low-Power Firmware Design',
-    'Peripherals & Drivers (DMA, Timer, ADC)', 'I2C / SPI / UART / CAN',
-    'Memory Management & Flash Programming', 'Git & GitHub'
+    {
+      categoryName: 'Bare-Metal & Low-Level Code',
+      skills: ['Embedded C', 'C++', 'Bare-Metal Programming', 'ARM Cortex Architecture']
+    },
+    {
+      categoryName: 'RTOS & Peripherals',
+      skills: ['FreeRTOS', 'Peripherals & Drivers (DMA, Timer, ADC)', 'I2C / SPI / UART / CAN']
+    },
+    {
+      categoryName: 'Hardware Debugging & Memory',
+      skills: ['Custom Bootloader Development', 'Hardware Debugging (JTAG / SWD)', 'Low-Power Firmware Design', 'Memory Management & Flash Programming', 'Git & GitHub']
+    }
   ],
   '5G & Wireless Networks': [
-    'Wireless Communication Principles', '5G Core & RAN Architecture',
-    'OFDM & Massive MIMO', 'RF Engineering Fundamentals', 'Network Protocols (TCP/IP, SCTP)',
-    'Wireshark Protocol Analysis', 'Software Defined Radio (SDR)', 'Open5GS / OpenAirInterface',
-    'Network Slicing & QoS', 'Linux Networking', 'Git & GitHub'
+    {
+      categoryName: 'Wireless Physical & MAC Layer',
+      skills: ['Wireless Communication Principles', 'OFDM & Massive MIMO', 'RF Engineering Fundamentals']
+    },
+    {
+      categoryName: '5G Architecture & Core',
+      skills: ['5G Core & RAN Architecture', 'Network Protocols (TCP/IP, SCTP)', 'Network Slicing & QoS']
+    },
+    {
+      categoryName: 'Analysis & Software Radio',
+      skills: ['Wireshark Protocol Analysis', 'Software Defined Radio (SDR)', 'Open5GS / OpenAirInterface', 'Linux Networking', 'Git & GitHub']
+    }
   ],
   'Electric Vehicle (EV) Powertrains': [
-    'EV Powertrain Architecture', 'Battery Management Systems (BMS)',
-    'Lithium-ion Cell Chemistry & SOC/SOH', 'Motor Drives (BLDC & PMSM)',
-    'MATLAB & Simulink Modeling', 'CAN Bus Automotive Communication',
-    'Power Electronics (Inverters / DC-DC)', 'Thermal Management Systems',
-    'Regenerative Braking Systems', 'High Voltage Safety Standards'
+    {
+      categoryName: 'Powertrain & Motor Drives',
+      skills: ['EV Powertrain Architecture', 'Motor Drives (BLDC & PMSM)', 'Power Electronics (Inverters / DC-DC)']
+    },
+    {
+      categoryName: 'BMS & Cell Chemistry',
+      skills: ['Battery Management Systems (BMS)', 'Lithium-ion Cell Chemistry & SOC/SOH', 'Thermal Management Systems']
+    },
+    {
+      categoryName: 'Simulation & Safety',
+      skills: ['MATLAB & Simulink Modeling', 'CAN Bus Automotive Communication', 'Regenerative Braking Systems', 'High Voltage Safety Standards']
+    }
   ],
   'Power Systems & Smart Grids': [
-    'Power System Analysis & Load Flow', 'Smart Grid Architecture',
-    'Renewable Integration (Solar / Wind)', 'SCADA & Telemetry Systems',
-    'High Voltage Engineering', 'Power System Protection & Numerical Relays',
-    'MATLAB / ETAP Simulation', 'Microgrids & Distributed Generation',
-    'Power Quality Analysis', 'Substation Automation'
+    {
+      categoryName: 'Power Analysis & Grid Architecture',
+      skills: ['Power System Analysis & Load Flow', 'Smart Grid Architecture', 'Renewable Integration (Solar / Wind)']
+    },
+    {
+      categoryName: 'Protection & Relay Coordination',
+      skills: ['High Voltage Engineering', 'Power System Protection & Numerical Relays', 'Power Quality Analysis']
+    },
+    {
+      categoryName: 'Automation & SCADA',
+      skills: ['SCADA & Telemetry Systems', 'MATLAB / ETAP Simulation', 'Microgrids & Distributed Generation', 'Substation Automation']
+    }
   ],
   'Industrial Automation & PLC': [
-    'PLC Programming (Ladder Logic, ST)', 'SCADA Systems (Wonderware / WinCC)',
-    'HMI Interface Design', 'Industrial Protocols (Modbus, Profinet, EtherCAT)',
-    'Variable Frequency Drives (VFDs)', 'Industrial Sensors & Transmitters',
-    'Pneumatics & Hydraulics', 'Safety Instrumented Systems (SIS)',
-    'Panel Wiring & Electrical Drawings', 'Mechatronics Integration'
+    {
+      categoryName: 'PLC & HMI Programming',
+      skills: ['PLC Programming (Ladder Logic, ST)', 'HMI Interface Design', 'SCADA Systems (Wonderware / WinCC)']
+    },
+    {
+      categoryName: 'Industrial Protocols & Drives',
+      skills: ['Industrial Protocols (Modbus, Profinet, EtherCAT)', 'Variable Frequency Drives (VFDs)', 'Industrial Sensors & Transmitters']
+    },
+    {
+      categoryName: 'Safety & Hardware',
+      skills: ['Pneumatics & Hydraulics', 'Safety Instrumented Systems (SIS)', 'Panel Wiring & Electrical Drawings', 'Mechatronics Integration']
+    }
   ],
   'Robotics & Mechatronics': [
-    'Mechatronics System Integration', 'ROS / ROS 2',
-    'Arduino & Raspberry Pi Embedded Systems', 'Sensor Fusion (IMU, Encoders, Ultrasonic)',
-    'CAD Modeling (SolidWorks / Fusion 360)', 'Actuators & Servo Control',
-    'MATLAB / Simulink Control Loops', 'C++ & Python Programming',
-    'Microcontroller Interfacing', 'PID Speed / Position Tuning'
+    {
+      categoryName: 'Mechatronics & Control',
+      skills: ['Mechatronics System Integration', 'Control Systems (PID / MPC)', 'MATLAB / Simulink Control Loops']
+    },
+    {
+      categoryName: 'Embedded & Sensors',
+      skills: ['ROS / ROS 2', 'Arduino & Raspberry Pi Embedded Systems', 'Sensor Fusion (IMU, Encoders, Ultrasonic)']
+    },
+    {
+      categoryName: 'CAD & Actuation',
+      skills: ['CAD Modeling (SolidWorks / Fusion 360)', 'Actuators & Servo Control', 'C++ & Python Programming', 'PID Speed / Position Tuning']
+    }
   ],
   'Automotive Embedded Systems': [
-    'Embedded C / C++', 'AUTOSAR Architecture',
-    'CAN, LIN & FlexRay Protocols', 'ISO 26262 (Functional Safety)',
-    'Automotive SPICE (ASPICE)', 'Hardware-in-the-Loop (HIL) Testing',
-    'Vector CANoe / CANalyzer', 'Automotive Diagnostics (UDS / OBD-II)',
-    'Microcontrollers (Infineon AURIX / NXP)', 'Automotive Cybersecurity'
+    {
+      categoryName: 'Automotive Software Architecture',
+      skills: ['Embedded C / C++', 'AUTOSAR Architecture', 'CAN, LIN & FlexRay Protocols']
+    },
+    {
+      categoryName: 'Functional Safety & Standards',
+      skills: ['ISO 26262 (Functional Safety)', 'Automotive SPICE (ASPICE)', 'Automotive Cybersecurity']
+    },
+    {
+      categoryName: 'HIL & Diagnostics',
+      skills: ['Hardware-in-the-Loop (HIL) Testing', 'Vector CANoe / CANalyzer', 'Automotive Diagnostics (UDS / OBD-II)', 'Microcontrollers (Infineon AURIX / NXP)']
+    }
   ],
   'CAD/CAM Digital Manufacturing': [
-    'SolidWorks / CATIA 3D CAD Modeling', 'Geometric Dimensioning & Tolerancing (GD&T)',
-    'CNC Programming & G-Code / M-Code', 'Mastercam / CAM Toolpath Generation',
-    'Additive Manufacturing & 3D Printing', 'Finite Element Analysis (ANSYS / FEA)',
-    'Design for Manufacturing & Assembly (DFM/DFA)', 'Metrology & CMM Inspection',
-    'Sheet Metal & Injection Molding Design'
+    {
+      categoryName: '3D CAD & Tolerancing',
+      skills: ['SolidWorks / CATIA 3D CAD Modeling', 'Geometric Dimensioning & Tolerancing (GD&T)', 'Design for Manufacturing & Assembly (DFM/DFA)']
+    },
+    {
+      categoryName: 'CAM & CNC Machining',
+      skills: ['CNC Programming & G-Code / M-Code', 'Mastercam / CAM Toolpath Generation', 'Metrology & CMM Inspection']
+    },
+    {
+      categoryName: 'Advanced Manufacturing & Simulation',
+      skills: ['Additive Manufacturing & 3D Printing', 'Finite Element Analysis (ANSYS / FEA)', 'Sheet Metal & Injection Molding Design']
+    }
   ],
   'Computational Fluid Dynamics (CFD)': [
-    'Fluid Dynamics & Thermodynamics', 'ANSYS Fluent / CFX',
-    'OpenFOAM Open-Source CFD', 'Computational Meshing (ICEM / Fluent Meshing)',
-    'Turbulence Modeling (k-epsilon, k-omega)', 'Heat Transfer Analysis',
-    'Aerodynamics & External Flow', 'Post-Processing & Data Visualization',
-    'Multiphase Flow Simulation'
+    {
+      categoryName: 'Fluid Mechanics & Thermodynamics',
+      skills: ['Fluid Dynamics & Thermodynamics', 'Heat Transfer Analysis', 'Aerodynamics & External Flow']
+    },
+    {
+      categoryName: 'Solvers & Turbulence',
+      skills: ['ANSYS Fluent / CFX', 'OpenFOAM Open-Source CFD', 'Turbulence Modeling (k-epsilon, k-omega)']
+    },
+    {
+      categoryName: 'Meshing & Post-Processing',
+      skills: ['Computational Meshing (ICEM / Fluent Meshing)', 'Post-Processing & Data Visualization', 'Multiphase Flow Simulation']
+    }
   ],
   'Smart City GIS & Infrastructure': [
-    'Geographic Information Systems (ArcGIS / QGIS)', 'Spatial Data Analysis & Geoprocessing',
-    'Remote Sensing & Satellite Image Processing', 'Python for Geospatial (GeoPandas, Shapely)',
-    'Urban Infrastructure Planning', 'IoT Smart Sensors & City Telemetry',
-    'AutoCAD Map 3D', 'Web GIS (Leaflet / Mapbox)',
-    'Cartographic Design & Surveying'
+    {
+      categoryName: 'GIS & Geoprocessing',
+      skills: ['Geographic Information Systems (ArcGIS / QGIS)', 'Spatial Data Analysis & Geoprocessing', 'AutoCAD Map 3D']
+    },
+    {
+      categoryName: 'Remote Sensing & Spatial Code',
+      skills: ['Remote Sensing & Satellite Image Processing', 'Python for Geospatial (GeoPandas, Shapely)', 'Web GIS (Leaflet / Mapbox)']
+    },
+    {
+      categoryName: 'City Telemetry & Urban Systems',
+      skills: ['Urban Infrastructure Planning', 'IoT Smart Sensors & City Telemetry', 'Cartographic Design & Surveying']
+    }
   ],
   'Construction Tech & BIM Modeling': [
-    'Autodesk Revit BIM Modeling', 'Navisworks Clash Detection & 4D Simulation',
-    'Construction Scheduling (Primavera P6)', 'AutoCAD Civil 3D',
-    'Structural Analysis (STAAD.Pro / ETABS)', 'Quantity Takeoff & Cost Estimation',
-    'Green Building Certification (LEED / GRIHA)', 'Drone Surveying & Site Photogrammetry',
-    'Site Safety & Quality Control'
+    {
+      categoryName: 'BIM Modeling & Coordination',
+      skills: ['Autodesk Revit BIM Modeling', 'Navisworks Clash Detection & 4D Simulation', 'AutoCAD Civil 3D']
+    },
+    {
+      categoryName: 'Project Management & Structures',
+      skills: ['Construction Scheduling (Primavera P6)', 'Structural Analysis (STAAD.Pro / ETABS)', 'Quantity Takeoff & Cost Estimation']
+    },
+    {
+      categoryName: 'Sustainable Construction & Surveying',
+      skills: ['Green Building Certification (LEED / GRIHA)', 'Drone Surveying & Site Photogrammetry', 'Site Safety & Quality Control']
+    }
   ],
   'Environmental Analytics & Monitoring': [
-    'Environmental Impact Assessment (EIA)', 'Air & Water Quality Sensor Monitoring',
-    'GIS Spatial Mapping for Environmental Data', 'Environmental Data Science (Python / R)',
-    'Pollution Dispersion Modeling (AERMOD)', 'Solid & Hazardous Waste Management',
-    'Water & Wastewater Treatment Design', 'Environmental Regulations & Compliance',
-    'Carbon Footprint & Sustainability Metrics'
+    {
+      categoryName: 'Environmental Sensing & GIS',
+      skills: ['Environmental Impact Assessment (EIA)', 'Air & Water Quality Sensor Monitoring', 'GIS Spatial Mapping for Environmental Data']
+    },
+    {
+      categoryName: 'Dispersion & Data Analytics',
+      skills: ['Environmental Data Science (Python / R)', 'Pollution Dispersion Modeling (AERMOD)', 'Carbon Footprint & Sustainability Metrics']
+    },
+    {
+      categoryName: 'Waste & Treatment Engineering',
+      skills: ['Solid & Hazardous Waste Management', 'Water & Wastewater Treatment Design', 'Environmental Regulations & Compliance']
+    }
   ]
 };
+
+// Derived flat skill arrays for chip tagging
+const domainSkillsMap = {};
+for (const domain in domainBenchmarks) {
+  domainSkillsMap[domain] = domainBenchmarks[domain].flatMap(cat => cat.skills);
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
   initIcons();
@@ -407,6 +629,7 @@ function handleTargetFieldChange() {
   state.candidate.currentSkills = [];
   renderSuggestedChips();
   updateSkillsBadge();
+  updateLiveHeatmap();
 }
 
 function updateSkillsBadge() {
@@ -427,6 +650,7 @@ function selectAllSkills() {
   state.candidate.currentSkills = [...new Set([...state.candidate.currentSkills, ...availableSkills])];
   renderSuggestedChips();
   updateSkillsBadge();
+  updateLiveHeatmap();
   showToast(`Selected all ${availableSkills.length} benchmark skills for ${targetField}!`, 'info');
 }
 
@@ -434,6 +658,7 @@ function clearAllSkills() {
   state.candidate.currentSkills = [];
   renderSuggestedChips();
   updateSkillsBadge();
+  updateLiveHeatmap();
   showToast('Cleared all selected skills.', 'info');
 }
 
@@ -443,7 +668,7 @@ function renderSuggestedChips() {
   if (!container) return;
 
   const targetField = state.candidate.targetField || 'Full Stack Web Development';
-  const availableSkills = domainSkillsMap[targetField] || domainSkillsMap['Full Stack Web Development'];
+  const availableSkills = domainSkillsMap[targetField] || domainSkillsMap['Full Stack Web Development'] || [];
 
   container.innerHTML = '';
 
@@ -485,6 +710,7 @@ function toggleSkillChip(skill) {
     state.candidate.currentSkills.push(skill);
   }
   renderSuggestedChips();
+  updateLiveHeatmap();
 }
 
 function addCustomSkill() {
@@ -495,9 +721,169 @@ function addCustomSkill() {
     state.candidate.currentSkills.push(val);
     input.value = '';
     renderSuggestedChips();
+    updateLiveHeatmap();
     showToast(`Added "${val}" to your current skills!`, 'success');
   }
 }
+
+// Live Real-Time Heatmap Generator (Evaluates active branch, target role, and candidate skills)
+function generateLiveHeatmapData(targetField, branch, currentSkills = [], candidateName = '') {
+  const domainKey = targetField || 'Full Stack Web Development';
+  const categoriesTemplate = domainBenchmarks[domainKey] || domainBenchmarks['Full Stack Web Development'] || [];
+
+  const userSkillsNorm = (currentSkills || [])
+    .map(s => String(s).toLowerCase().replace(/[^a-z0-9]/g, ''))
+    .filter(Boolean);
+
+  let totalSkills = 0;
+  let masteredCount = 0;
+  const strengths = [];
+  const criticalGaps = [];
+
+  const heatmap = categoriesTemplate.map(cat => {
+    const skills = cat.skills.map((skillName, sIdx) => {
+      totalSkills++;
+      const normSkill = skillName.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+      // Check if user has selected or added this skill
+      const isSelected = userSkillsNorm.some(us => normSkill.includes(us) || us.includes(normSkill));
+
+      if (isSelected) {
+        masteredCount++;
+        if (strengths.length < 6) strengths.push(skillName);
+        return {
+          name: skillName,
+          demandPercentage: 92 + (sIdx % 7),
+          userProficiencyPercentage: 88 + (sIdx % 9),
+          status: 'Mastered',
+          marketTrend: 'Surging',
+          heatLevel: 'high'
+        };
+      } else {
+        if (criticalGaps.length < 6) criticalGaps.push(skillName);
+        return {
+          name: skillName,
+          demandPercentage: 86 + (sIdx % 10),
+          userProficiencyPercentage: 18 + ((sIdx * 3) % 15),
+          status: 'Critical Gap',
+          marketTrend: 'High Demand',
+          heatLevel: 'critical-gap'
+        };
+      }
+    });
+
+    return {
+      categoryName: cat.categoryName,
+      skills
+    };
+  });
+
+  // Check for custom skills not in benchmark
+  const unmatchedCustomSkills = [];
+  (currentSkills || []).forEach(customSkill => {
+    const normUser = String(customSkill).toLowerCase().replace(/[^a-z0-9]/g, '');
+    let matched = false;
+    for (const cat of categoriesTemplate) {
+      for (const bSkill of cat.skills) {
+        const normBenchmark = bSkill.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (normBenchmark.includes(normUser) || normUser.includes(normBenchmark)) {
+          matched = true;
+          break;
+        }
+      }
+      if (matched) break;
+    }
+    if (!matched) {
+      unmatchedCustomSkills.push(customSkill);
+    }
+  });
+
+  if (unmatchedCustomSkills.length > 0) {
+    heatmap.push({
+      categoryName: 'Custom & Candidate Endorsed Competencies',
+      skills: unmatchedCustomSkills.map(cs => {
+        masteredCount++;
+        totalSkills++;
+        if (strengths.length < 6) strengths.push(cs);
+        return {
+          name: cs,
+          demandPercentage: 90,
+          userProficiencyPercentage: 95,
+          status: 'Mastered',
+          marketTrend: 'Surging',
+          heatLevel: 'high'
+        };
+      })
+    });
+  }
+
+  const calculatedScore = totalSkills > 0 ? Math.round((masteredCount / totalSkills) * 100) : 0;
+  const overallMatchScore = masteredCount === 0 ? 0 : Math.min(100, Math.max(10, calculatedScore));
+  const isHighMatch = overallMatchScore >= 70;
+
+  let summaryText = '';
+  if (masteredCount === 0) {
+    summaryText = `Select your known skills from the chips above or type custom competencies to benchmark your real-time proficiency against 2026 industry requirements for ${domainKey} (${branch}).`;
+  } else if (isHighMatch) {
+    summaryText = `Candidate demonstrates high industry alignment across ${masteredCount} verified benchmark skill(s) for ${domainKey} (${branch}). Qualified for direct placement pipeline and capstone unlocks.`;
+  } else {
+    summaryText = `Candidate demonstrates foundational capability in ${masteredCount} verified skill(s) for ${domainKey}. Critical industry gaps identified in ${criticalGaps.slice(0, 3).join(', ')}. Bridge curriculum recommended in Phase 2.`;
+  }
+
+  return {
+    candidateName: candidateName || 'Candidate',
+    branch: branch,
+    targetField: domainKey,
+    overallMatchScore: overallMatchScore,
+    industryDemandLevel: 'Surging (94% Hiring Surge in Q3 2026)',
+    readinessStatus: isHighMatch ? 'High Skill Alignment (Placement Ready)' : (masteredCount === 0 ? 'Skill Assessment In Progress' : 'Critical Skill Gap Identified'),
+    branchingTrigger: isHighMatch ? 'high_skill_match' : 'low_skill_gap',
+    summary: summaryText,
+    strengths: strengths,
+    criticalGaps: criticalGaps,
+    heatmap: heatmap
+  };
+}
+
+function updateLiveHeatmap() {
+  const branchSelect = document.getElementById('input-branch');
+  const targetSelect = document.getElementById('input-target-field');
+
+  const branch = branchSelect ? branchSelect.value : (state.candidate.branch || 'Computer Science & Engineering');
+  const targetField = targetSelect ? targetSelect.value : (state.candidate.targetField || 'Full Stack Web Development');
+
+  // If domain changed, reset active category tab to All Categories (-1)
+  if (state.lastRenderedDomain !== targetField) {
+    state.activeHeatmapCategory = -1;
+    state.lastRenderedDomain = targetField;
+  }
+
+  // Generate live gap analysis
+  const liveData = generateLiveHeatmapData(
+    targetField,
+    branch,
+    state.candidate.currentSkills,
+    state.candidate.name
+  );
+
+  state.assessmentData = liveData;
+
+  // Render heatmap dashboard
+  renderHeatmapDashboard(liveData);
+
+  // Ensure dashboard is visible
+  const dashboard = document.getElementById('heatmap-dashboard');
+  if (dashboard) {
+    dashboard.classList.remove('hidden');
+  }
+
+  // Synchronize Phase 2 roadmap header title
+  const roadmapTitle = document.getElementById('roadmap-domain-title');
+  if (roadmapTitle) {
+    roadmapTitle.innerText = `${targetField} Industry Alignment Roadmap`;
+  }
+}
+
 
 // Phase 1: Handle Assessment Submit
 async function handleAssessmentSubmit(e) {
@@ -575,51 +961,94 @@ async function handleAssessmentSubmit(e) {
 
 // Render Heatmap Dashboard
 function renderHeatmapDashboard(data) {
+  if (!data) return;
   const score = Math.round(data.overallMatchScore || 0);
   const scoreNumberEl = document.getElementById('score-number');
   const gaugeCircle = document.getElementById('gauge-circle');
   const matchStatusBadge = document.getElementById('match-status-badge');
   const demandLevelPill = document.getElementById('demand-level-pill');
 
-  scoreNumberEl.innerText = `${score}%`;
-  const offset = 264 - (264 * score) / 100;
-  gaugeCircle.style.strokeDashoffset = offset;
+  if (scoreNumberEl) scoreNumberEl.innerText = `${score}%`;
+  if (gaugeCircle) {
+    const offset = 264 - (264 * score) / 100;
+    gaugeCircle.style.strokeDashoffset = offset;
 
-  if (score >= 75) {
-    gaugeCircle.className.baseVal = 'text-emerald-400 transition-all duration-1000';
-    matchStatusBadge.className = 'mt-2 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
-    matchStatusBadge.innerText = 'High Skill Alignment (Placement Ready)';
-  } else {
-    gaugeCircle.className.baseVal = 'text-amber-400 transition-all duration-1000';
-    matchStatusBadge.className = 'mt-2 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20';
-    matchStatusBadge.innerText = 'Critical Skill Gap Identified';
+    if (score === 0) {
+      gaugeCircle.className.baseVal = 'text-slate-700 transition-all duration-1000';
+      if (matchStatusBadge) {
+        matchStatusBadge.className = 'mt-2 px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-400 border border-slate-700';
+        matchStatusBadge.innerText = 'Skill Assessment In Progress (Click Skills to Benchmark)';
+      }
+    } else if (score >= 70) {
+      gaugeCircle.className.baseVal = 'text-emerald-400 transition-all duration-1000';
+      if (matchStatusBadge) {
+        matchStatusBadge.className = 'mt-2 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+        matchStatusBadge.innerText = 'High Skill Alignment (Placement Ready)';
+      }
+    } else {
+      gaugeCircle.className.baseVal = 'text-amber-400 transition-all duration-1000';
+      if (matchStatusBadge) {
+        matchStatusBadge.className = 'mt-2 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20';
+        matchStatusBadge.innerText = 'Critical Skill Gap Identified';
+      }
+    }
   }
 
-  document.getElementById('analysis-candidate-title').innerText = `${state.candidate.name || 'Candidate'}'s Alignment for ${data.targetField}`;
-  document.getElementById('analysis-summary-text').innerText = data.summary || '';
-  if (data.industryDemandLevel) {
+  const candidateName = state.candidate.name || 'Candidate';
+  const branchName = data.branch || state.candidate.branch || '';
+  const titleText = branchName 
+    ? `${candidateName}'s Live Alignment for ${data.targetField} (${branchName})`
+    : `${candidateName}'s Live Alignment for ${data.targetField}`;
+
+  const titleEl = document.getElementById('analysis-candidate-title');
+  if (titleEl) titleEl.innerText = titleText;
+
+  const summaryEl = document.getElementById('analysis-summary-text');
+  if (summaryEl) summaryEl.innerText = data.summary || '';
+
+  if (demandLevelPill && data.industryDemandLevel) {
     demandLevelPill.innerText = `${data.industryDemandLevel}`;
   }
 
   // Strengths
   const strengthsContainer = document.getElementById('strengths-tags');
-  strengthsContainer.innerHTML = '';
-  (data.strengths || []).forEach(str => {
-    const span = document.createElement('span');
-    span.className = 'px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-[11px] font-semibold';
-    span.innerText = str;
-    strengthsContainer.appendChild(span);
-  });
+  if (strengthsContainer) {
+    strengthsContainer.innerHTML = '';
+    const strengthsList = (data.strengths || []).filter(Boolean);
+    if (strengthsList.length === 0) {
+      const span = document.createElement('span');
+      span.className = 'px-2 py-0.5 rounded-md bg-slate-800/80 border border-slate-700 text-slate-400 text-[11px] font-semibold';
+      span.innerText = 'Select known skills above to populate strengths';
+      strengthsContainer.appendChild(span);
+    } else {
+      strengthsList.forEach(str => {
+        const span = document.createElement('span');
+        span.className = 'px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-[11px] font-semibold';
+        span.innerText = str;
+        strengthsContainer.appendChild(span);
+      });
+    }
+  }
 
   // Critical Gaps
   const gapsContainer = document.getElementById('critical-gaps-tags');
-  gapsContainer.innerHTML = '';
-  (data.criticalGaps || []).forEach(gap => {
-    const span = document.createElement('span');
-    span.className = 'px-2 py-0.5 rounded-md bg-rose-500/10 border border-rose-500/30 text-rose-300 text-[11px] font-semibold';
-    span.innerText = gap;
-    gapsContainer.appendChild(span);
-  });
+  if (gapsContainer) {
+    gapsContainer.innerHTML = '';
+    const gapsList = (data.criticalGaps || []).filter(Boolean);
+    if (gapsList.length === 0) {
+      const span = document.createElement('span');
+      span.className = 'px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-[11px] font-semibold';
+      span.innerText = 'All core benchmark skills mastered!';
+      gapsContainer.appendChild(span);
+    } else {
+      gapsList.forEach(gap => {
+        const span = document.createElement('span');
+        span.className = 'px-2 py-0.5 rounded-md bg-rose-500/10 border border-rose-500/30 text-rose-300 text-[11px] font-semibold';
+        span.innerText = gap;
+        gapsContainer.appendChild(span);
+      });
+    }
+  }
 
   renderBranchingBanner(data);
   renderHeatmapCategories(data.heatmap || []);
@@ -628,7 +1057,8 @@ function renderHeatmapDashboard(data) {
 
 function renderBranchingBanner(data) {
   const container = document.getElementById('branching-container');
-  const isHighMatch = data.overallMatchScore >= 75 || data.branchingTrigger === 'high_skill_match';
+  if (!container) return;
+  const isHighMatch = data.overallMatchScore >= 70 || data.branchingTrigger === 'high_skill_match';
 
   if (isHighMatch) {
     container.className = 'rounded-3xl p-6 bg-gradient-to-r from-emerald-950/70 via-slate-900 to-teal-950/70 border border-emerald-500/40 shadow-2xl';
@@ -674,7 +1104,7 @@ function renderBranchingBanner(data) {
             </div>
             <h4 class="text-xl font-black text-white">Interactive Bridge Roadmap Recommended</h4>
             <p class="text-xs text-slate-300 mt-1 max-w-2xl">
-              Gaps identified in production frameworks, cloud deployments, and system design. KaushalSetu has prepared your 4-stage modular curriculum.
+              Target role: ${data.targetField}. KaushalSetu has prepared your 4-stage modular curriculum to bridge identified domain gaps.
             </p>
           </div>
         </div>
@@ -691,25 +1121,31 @@ function renderBranchingBanner(data) {
 // Category Tabs for Heatmap
 function renderHeatmapCategories(categories) {
   const tabsContainer = document.getElementById('heatmap-category-tabs');
+  if (!tabsContainer) return;
   tabsContainer.innerHTML = '';
+
+  const catList = categories || [];
+  if (state.activeHeatmapCategory >= catList.length) {
+    state.activeHeatmapCategory = -1;
+  }
 
   const allBtn = document.createElement('button');
   allBtn.className = `px-3.5 py-1.5 rounded-xl transition ${state.activeHeatmapCategory === -1 ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'}`;
-  allBtn.innerText = 'All Categories';
+  allBtn.innerText = 'All Topics & Categories';
   allBtn.onclick = () => {
     state.activeHeatmapCategory = -1;
-    renderHeatmapCategories(categories);
+    renderHeatmapCategories(catList);
     renderHeatmapGrid();
   };
   tabsContainer.appendChild(allBtn);
 
-  categories.forEach((cat, idx) => {
+  catList.forEach((cat, idx) => {
     const btn = document.createElement('button');
     btn.className = `px-3.5 py-1.5 rounded-xl transition ${state.activeHeatmapCategory === idx ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'}`;
     btn.innerText = cat.categoryName;
     btn.onclick = () => {
       state.activeHeatmapCategory = idx;
-      renderHeatmapCategories(categories);
+      renderHeatmapCategories(catList);
       renderHeatmapGrid();
     };
     tabsContainer.appendChild(btn);
@@ -775,12 +1211,18 @@ function renderHeatmapGrid() {
 
     const trendBadge = `<span class="text-[10px] text-slate-400">${skill.marketTrend === 'Surging' ? '🔥 Surging' : (skill.marketTrend === 'High Demand' ? '📈 High Demand' : '⚖️ Stable')}</span>`;
 
-    card.className = `glass-card p-4 rounded-2xl border border-slate-700/80 ${borderClass} space-y-3`;
+    card.className = `glass-card p-4 rounded-2xl border border-slate-700/80 ${borderClass} space-y-3 cursor-pointer hover:border-slate-500 transition`;
+    card.title = isMastered ? `Click to mark "${skill.name}" as unlearned` : `Click to mark "${skill.name}" as mastered`;
+    card.onclick = () => toggleSkillChip(skill.name);
+
     card.innerHTML = `
       <div class="flex items-start justify-between gap-2">
         <div>
           <span class="text-[10px] uppercase font-semibold tracking-wider text-slate-500 block">${skill.category}</span>
-          <h5 class="text-sm font-bold text-white">${skill.name}</h5>
+          <h5 class="text-sm font-bold text-white flex items-center gap-1.5">
+            ${skill.name}
+            <span class="text-[10px] text-slate-500 font-normal hover:text-slate-300">(${isMastered ? 'click to remove' : 'click to add'})</span>
+          </h5>
         </div>
         ${statusBadge}
       </div>
@@ -808,6 +1250,7 @@ function renderHeatmapGrid() {
 
   initIcons();
 }
+
 
 // Fetch and Render Roadmap (Phase 2)
 async function fetchRoadmapData() {
