@@ -452,6 +452,7 @@ function getFallbackGapAnalysis({ name, targetField, currentSkills, experienceLe
 }
 
 const { domainRoadmaps } = require('../public/js/domainRoadmaps');
+const { getDomainPostCompletionData } = require('../public/js/domainInternships');
 
 function getFallbackRoadmap({ targetField }) {
   const domainKey = targetField || 'Full Stack Web Development';
@@ -460,157 +461,23 @@ function getFallbackRoadmap({ targetField }) {
 }
 
 function getFallbackPostCompletionData({ targetField }) {
+  const domainKey = targetField || 'Full Stack Web Development';
+  const domainData = getDomainPostCompletionData(domainKey);
+
   return {
-    hackathonsAndSummits: {
-      hackathons: [
-        {
-          id: 'sih-2025',
-          title: 'Smart India Hackathon (SIH 2025/2026)',
-          organizer: 'Ministry of Education Innovation Cell & AICTE',
-          prizePool: '₹1,00,000 / Problem Statement',
-          deadline: 'October 30, 2026',
-          mode: 'Nationwide Hybrid',
-          tags: ['Govt of India', 'National Flagship', 'Ministry Level'],
-          link: 'https://www.sih.gov.in/'
-        },
-        {
-          id: 'gsc-2026',
-          title: 'Google Solution Challenge 2026',
-          organizer: 'Google Developer Student Clubs',
-          prizePool: '$10,000 + Google Mentorship',
-          deadline: 'November 15, 2026',
-          mode: 'Online Global',
-          tags: ['Google Global', 'UN SDGs', 'Mentorship'],
-          link: 'https://developers.google.com/community/gdsc-solution-challenge'
-        },
-        {
-          id: 'unstop-national',
-          title: 'Unstop National Tech Grand Challenge',
-          organizer: 'Unstop & Fortune 500 Partners',
-          prizePool: '₹5,00,000 + Pre-Placement Interviews (PPI)',
-          deadline: 'December 05, 2026',
-          mode: 'Online / Final Round Bengaluru',
-          tags: ['Direct PPI', 'Top Tech Brands', 'Flagship'],
-          link: 'https://unstop.com/'
-        }
-      ],
-      bootcamps: [
-        {
-          id: 'bootcamp-1',
-          title: 'Scaler Academy: Advanced System Design & Scalability',
-          mentor: 'Ex-Staff Engineer @ Google & Uber',
-          duration: '3 Intensive Weekends',
-          status: 'Direct Admission Open',
-          focus: 'Distributed Caching, Sharding, Kafka Streaming',
-          registerUrl: 'https://www.scaler.com/'
-        },
-        {
-          id: 'bootcamp-2',
-          title: 'Coursera: Generative AI & Full-Stack Cloud Specialization',
-          mentor: 'DeepLearning.AI & AWS Instructors',
-          duration: '4 Weeks Hands-on',
-          status: 'Direct Admission Open',
-          focus: 'Gemini API, RAG Pipelines, Tool Calling Agents',
-          registerUrl: 'https://www.coursera.org/specializations/generative-ai-engineering'
-        },
-        {
-          id: 'bootcamp-3',
-          title: 'Unstop Technology Fellowship & Coding Bootcamp',
-          mentor: 'Top Engineering Leads & Mentors',
-          duration: '2 Weeks Masterclass',
-          status: 'Direct Admission Open',
-          focus: 'DSA Masterclass & Mock Technical Interviews',
-          registerUrl: 'https://unstop.com/bootcamps'
-        }
-      ],
-      summits: [
-        {
-          id: 'summit-1',
-          title: 'AICTE National Industry-Academia Conclave 2026',
-          organizer: 'AICTE & Ministry of Skill Development',
-          date: 'Nov 18, 2026',
-          mode: 'Bharat Mandapam, New Delhi & Live Stream',
-          perk: 'Official Delegate Pass Unlocked'
-        },
-        {
-          id: 'summit-2',
-          title: 'AWS Community Day India 2026',
-          organizer: 'AWS User Group India',
-          date: 'Dec 02, 2026',
-          mode: 'Hybrid (Bengaluru / Virtual)',
-          perk: 'Direct Networking with Hiring Managers'
-        }
-      ]
-    },
-    internships: [
-      {
-        id: 'int-01',
-        company: 'Razorpay Technologies',
-        logoInitials: 'RZP',
-        role: 'Full Stack Software Engineer Intern',
-        stipend: '₹45,000 / month',
-        location: 'Bengaluru (Hybrid)',
-        duration: '6 Months',
-        requiredSkills: ['Node.js', 'TypeScript', 'React.js', 'PostgreSQL', 'Docker'],
-        matchScore: 98,
-        openings: 4,
-        deadline: 'Closing in 5 days',
-        description: 'Work alongside payment gateway infrastructure teams building fault-tolerant transactional microservices.'
-      },
-      {
-        id: 'int-02',
-        company: 'Zerodha Broking Ltd',
-        logoInitials: 'ZRD',
-        role: 'Backend & Systems Engineering Intern',
-        stipend: '₹50,000 / month',
-        location: 'Remote (India)',
-        duration: '6 Months',
-        requiredSkills: ['Node.js/Go', 'PostgreSQL', 'Redis', 'Clean Architecture'],
-        matchScore: 95,
-        openings: 2,
-        deadline: 'Closing in 3 days',
-        description: 'Build ultra low-latency order execution sub-systems and real-time streaming market data websockets.'
-      },
-      {
-        id: 'int-03',
-        company: 'Swiggy Tech',
-        logoInitials: 'SWG',
-        role: 'Frontend & Platform Intern',
-        stipend: '₹40,000 / month',
-        location: 'Remote / Bengaluru',
-        duration: '4 Months',
-        requiredSkills: ['React.js', 'Next.js', 'State Management', 'Tailwind CSS'],
-        matchScore: 94,
-        openings: 5,
-        deadline: 'Closing in 6 days',
-        description: 'Craft hyper-responsive mobile-first consumer interfaces with instant load times and optimistic UI updates.'
-      },
-      {
-        id: 'int-04',
-        company: 'Tata Digital (Tata Neu)',
-        logoInitials: 'TAT',
-        role: 'Cloud Engineering & DevOps Intern',
-        stipend: '₹35,000 / month',
-        location: 'Pune / Hybrid',
-        duration: '6 Months',
-        requiredSkills: ['Docker', 'CI/CD Pipelines', 'AWS', 'Linux Shell'],
-        matchScore: 92,
-        openings: 3,
-        deadline: 'Closing in 8 days',
-        description: 'Implement automated deployment pipelines, health check dashboards, and containerized microservices.'
-      }
-    ],
+    hackathonsAndSummits: domainData.hackathonsAndSummits,
+    internships: domainData.internships,
     linkedinChecklist: [
-      { id: 1, task: 'Add target keyword headline tailored to your field: "Aspiring Software Engineer | React, Node.js, TypeScript | KaushalSetu Certified"', category: 'Headline', impact: '+45% Recruiter Search Clicks' },
-      { id: 2, task: 'Feature your Capstone GitHub project with live demo link and visual architecture diagram in the Featured section', category: 'Featured Section', impact: 'Direct Proof of Work' },
-      { id: 3, task: 'Structure About section highlighting SIH roadmap completion, problem-solving stats (LeetCode), and technical stack', category: 'Summary', impact: 'High ATS Match' },
-      { id: 4, task: 'Request skill endorsements for top 5 gap-bridged skills from project peers or mentors', category: 'Skill Endorsements', impact: 'Social Proof' },
-      { id: 5, task: 'Craft personalized connection requests to recruiters with concise 3-line pitch on your production projects', category: 'Outreach', impact: '3x Response Rate' }
+      { id: 1, task: `Add target keyword headline tailored to your field: "Aspiring ${domainKey} Specialist | KaushalSetu Certified"`, category: 'Headline', impact: '+45% Recruiter Search Clicks' },
+      { id: 2, task: `Feature your ${domainKey} Capstone project with live demo link and engineering blueprint in the Featured section`, category: 'Featured Section', impact: 'Direct Proof of Work' },
+      { id: 3, task: `Structure About section highlighting 100% roadmap completion in ${domainKey} and verified competencies`, category: 'Summary', impact: 'High ATS Match' },
+      { id: 4, task: 'Request skill endorsements for top gap-bridged skills from project peers or mentors', category: 'Skill Endorsements', impact: 'Social Proof' },
+      { id: 5, task: 'Craft personalized connection requests to recruiters with concise 3-line pitch on your verified production projects', category: 'Outreach', impact: '3x Response Rate' }
     ],
     careerTips: [
-      'Pin your 2 best full-stack GitHub repositories with clear READMEs, architecture diagrams, and 1-click live demo links.',
-      'Quantify your project achievements on your resume (e.g., "Reduced response latency by 40% with Redis cache").',
-      'Demonstrate consistency by showcasing your LeetCode problem solving streak and GitHub commit heatmaps.'
+      `Pin your best verified ${domainKey} repositories with clear technical specifications and architecture blueprints.`,
+      `Quantify domain outcomes on your resume (e.g., "Optimized throughput by 35% using industry standard methodologies").`,
+      'Demonstrate technical consistency by showcasing your problem solving streak and design verifications.'
     ]
   };
 }

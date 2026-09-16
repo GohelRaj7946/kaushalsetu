@@ -18,6 +18,7 @@ const state = {
   assessmentData: null,
   roadmapData: null,
   postCompletionData: null,
+  postCompletionDomain: null,
   liveJobs: [],
   resumeData: null,
   activeHeatmapFilter: 'all',
@@ -512,6 +513,14 @@ function showPage(pageId) {
     }
   }
 
+  // When switching to Phase 3, ensure internships strictly match current branch/targetField
+  if (pageId === 'page-phase3') {
+    const currentTarget = state.candidate.targetField || 'Full Stack Web Development';
+    if (!state.postCompletionData || state.postCompletionDomain !== currentTarget) {
+      fetchPostCompletionData(currentTarget);
+    }
+  }
+
   // Update Header Nav Tab Buttons
   const navMap = {
     'page-onboarding': 'nav-btn-onboarding',
@@ -639,6 +648,7 @@ function handleTargetFieldChange() {
   updateSkillsBadge();
   updateLiveHeatmap();
   fetchRoadmapData();
+  fetchPostCompletionData(targetField);
 }
 
 function updateSkillsBadge() {
@@ -1759,22 +1769,40 @@ function simulateHundredPercentCompletion() {
 }
 
 // Fetch and Render Post-Completion Hub (Phase 3)
-async function fetchPostCompletionData() {
+async function fetchPostCompletionData(targetDomain) {
+  const currentTarget = targetDomain || state.candidate.targetField || 'Full Stack Web Development';
+
+  // 1. Instant client-side render if domainInternshipsData is available
+  if (typeof domainInternshipsData !== 'undefined' && domainInternshipsData[currentTarget]) {
+    state.postCompletionDomain = currentTarget;
+    state.postCompletionData = domainInternshipsData[currentTarget];
+    renderPostCompletion(domainInternshipsData[currentTarget], currentTarget);
+  }
+
   try {
-    const res = await fetch(`/api/post-completion-data?targetField=${encodeURIComponent(state.candidate.targetField)}&candidateName=${encodeURIComponent(state.candidate.name || 'Candidate')}`);
+    const res = await fetch(`/api/post-completion-data?targetField=${encodeURIComponent(currentTarget)}&candidateName=${encodeURIComponent(state.candidate.name || 'Candidate')}`);
     const resJson = await res.json();
     if (resJson.success && resJson.data) {
-      state.postCompletionData = resJson.data;
-      renderPostCompletion(resJson.data);
+      if ((state.candidate.targetField || 'Full Stack Web Development') === currentTarget) {
+        state.postCompletionDomain = currentTarget;
+        state.postCompletionData = resJson.data;
+        renderPostCompletion(resJson.data, currentTarget);
+      }
     }
   } catch (err) {
-    console.error('Failed to pre-fetch post-completion data:', err);
+    console.warn('Post-completion network note (using local verified domain internships):', err.message);
+    if (!state.postCompletionData && typeof domainInternshipsData !== 'undefined' && domainInternshipsData[currentTarget]) {
+      state.postCompletionDomain = currentTarget;
+      state.postCompletionData = domainInternshipsData[currentTarget];
+      renderPostCompletion(domainInternshipsData[currentTarget], currentTarget);
+    }
   }
 }
 
-function renderPostCompletion(data) {
+function renderPostCompletion(data, domain) {
+  const currentTarget = domain || state.candidate.targetField || 'Full Stack Web Development';
   renderHackathonsAndSummits(data.hackathonsAndSummits);
-  renderInternships(data.internships);
+  renderInternships(data.internships, currentTarget);
   renderLinkedInChecklist(data.linkedinChecklist);
   generateAiResume();
   initIcons();
@@ -1861,9 +1889,19 @@ function renderHackathonsAndSummits(data) {
 }
 
 // Render Live Internships (Phase 3)
-function renderInternships(internships) {
+function renderInternships(internships, domain) {
+  const currentDomain = domain || state.candidate.targetField || 'Full Stack Web Development';
   const container = document.getElementById('internships-grid');
   if (!container || !internships) return;
+
+  const titleEl = document.getElementById('internships-section-title');
+  if (titleEl) {
+    titleEl.innerText = `Live Verified ${currentDomain} Internships`;
+  }
+  const descEl = document.getElementById('internships-section-desc');
+  if (descEl) {
+    descEl.innerText = `Direct hiring partner postings matching your 100% ${currentDomain} verified skillset.`;
+  }
 
   container.innerHTML = '';
   internships.forEach(int => {

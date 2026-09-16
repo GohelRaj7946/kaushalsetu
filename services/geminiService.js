@@ -173,6 +173,7 @@ Return ONLY valid JSON matching this schema:
 
 async function getPostCompletionData({ targetField, candidateName }) {
   const prompt = `You are KaushalSetu AI. Return post-completion industry opportunities for a candidate who has achieved 100% completion in their ${targetField} roadmap.
+Important: The 4 internships MUST be authentic industry roles and well-known employers strictly tailored to ${targetField} (e.g. if Mechanical/Robotics: KUKA, ABB, GreyOrange; if VLSI/ECE: Qualcomm, Texas Instruments, Synopsys; if EV/EEE: Ather Energy, Ola Electric, Tata AutoComp; if Civil/BIM: L&T Construction, Shapoorji Pallonji; if GenAI: Microsoft Research, Adobe; etc.), with stipends (₹30,000 to ₹75,000/mo), real required skills matching ${targetField}, and accurate descriptions.
 
 Return strictly valid JSON:
 {
