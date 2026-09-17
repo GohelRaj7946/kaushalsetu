@@ -127,8 +127,18 @@ code, pre, .mono {
   display: none;
 }
 
+/* Recruiter Table Styles */
+#employer-table-container table tr td,
+#employer-table-container table tr th {
+  transition: background-color 0.15s ease;
+}
+
+#employer-table-container table tr:hover td {
+  background-color: rgba(30, 41, 59, 0.45);
+}
+
 /* ========================================================================= */
-/* BULLETPROOF PRINT STYLES FOR ATTRACTIVE EXECUTIVE ATS RESUME (NO BLANK PAGES) */
+/* BULLETPROOF PRINT STYLES FOR ATTRACTIVE EXECUTIVE ATS RESUME & OFFER LETTER */
 /* ========================================================================= */
 @media print {
   @page {

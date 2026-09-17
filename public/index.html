@@ -125,6 +125,13 @@
           <span class="w-5 h-5 rounded-full bg-slate-700 text-slate-300 font-bold flex items-center justify-center text-[10px]">4</span>
           Phase 4: Live Jobs & Career Prep
         </button>
+        <button id="nav-btn-employer" onclick="showPage('page-employer')" class="px-3.5 py-2 rounded-xl bg-indigo-950/50 text-indigo-300 hover:text-white border border-indigo-500/30 hover:border-indigo-500/60 flex items-center gap-2 transition whitespace-nowrap shadow-sm">
+          <span class="w-5 h-5 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-[10px]">
+            <i data-lucide="building-2" class="w-3 h-3"></i>
+          </span>
+          <span>Employer Connect Portal</span>
+          <span class="px-1.5 py-0.5 rounded text-[9px] bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-bold uppercase tracking-wider">Recruiter</span>
+        </button>
       </div>
 
     </div>
@@ -794,6 +801,185 @@
 
     </div>
 
+    <!-- ========================================================================= -->
+    <!-- EMPLOYER CONNECT PORTAL: DIRECT CANDIDATE INGESTION & SELECTION CONSOLE  -->
+    <!-- ========================================================================= -->
+    <div id="page-employer" class="app-page space-y-8">
+      
+      <!-- Recruiter Header Banner -->
+      <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-indigo-500/30 relative overflow-hidden bg-gradient-to-br from-slate-900 via-indigo-950/40 to-slate-900 shadow-2xl">
+        <div class="absolute -right-16 -top-16 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+          <div class="space-y-2">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 text-xs font-semibold">
+              <i data-lucide="building" class="w-3.5 h-3.5"></i>
+              Verified Employer Talent Acquisition Engine
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-3">
+              <span>Employer Connect & Direct Selection Portal</span>
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-400 max-w-2xl leading-relaxed">
+              Real-time pipeline of engineering candidates from across India. Analyze verified roadmap milestones, inspect ATS resumes, evaluate domain skill mastery, and issue official offers directly from this console.
+            </p>
+          </div>
+
+          <!-- Recruiter Info & Quick Refresh -->
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="px-4 py-2.5 rounded-2xl bg-slate-950/80 border border-slate-800 text-xs flex items-center gap-3">
+              <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-white shadow-md">
+                <i data-lucide="shield-check" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <div class="font-bold text-slate-200 text-xs">National Industry Partner Pool</div>
+                <div class="text-[11px] text-emerald-400 font-medium flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  Live Candidate Stream Active
+                </div>
+              </div>
+            </div>
+            <button onclick="fetchEmployerApplications()" class="px-4 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-2 transition shadow-lg shadow-indigo-500/25">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+              Refresh Pipeline
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI Metrics Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        <!-- Card 1: Total Received -->
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-2">
+            <span>Total Ingested</span>
+            <div class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center">
+              <i data-lucide="users" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div>
+            <div id="kpi-total-applicants" class="text-2xl sm:text-3xl font-black text-white">0</div>
+            <div class="text-[11px] text-slate-400 mt-1">Cross-branch candidates</div>
+          </div>
+        </div>
+
+        <!-- Card 2: Under Review -->
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-2">
+            <span>Under Review</span>
+            <div class="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
+              <i data-lucide="clock" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div>
+            <div id="kpi-review-applicants" class="text-2xl sm:text-3xl font-black text-amber-400">0</div>
+            <div class="text-[11px] text-slate-400 mt-1">Pending screening</div>
+          </div>
+        </div>
+
+        <!-- Card 3: Shortlisted -->
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-2">
+            <span>Shortlisted</span>
+            <div class="w-7 h-7 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
+              <i data-lucide="user-check" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div>
+            <div id="kpi-shortlisted-applicants" class="text-2xl sm:text-3xl font-black text-cyan-400">0</div>
+            <div class="text-[11px] text-slate-400 mt-1">Ready for technical round</div>
+          </div>
+        </div>
+
+        <!-- Card 4: Interviews Scheduled -->
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-2">
+            <span>Interviews</span>
+            <div class="w-7 h-7 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center">
+              <i data-lucide="calendar" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div>
+            <div id="kpi-interview-applicants" class="text-2xl sm:text-3xl font-black text-purple-400">0</div>
+            <div class="text-[11px] text-slate-400 mt-1">Live rounds active</div>
+          </div>
+        </div>
+
+        <!-- Card 5: Offers Extended / Selected -->
+        <div class="glass-card p-5 rounded-2xl border border-slate-800 flex flex-col justify-between col-span-2 lg:col-span-1">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-semibold mb-2">
+            <span>Selected & Offered</span>
+            <div class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+              <i data-lucide="award" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div>
+            <div id="kpi-selected-applicants" class="text-2xl sm:text-3xl font-black text-emerald-400">0</div>
+            <div class="text-[11px] text-slate-400 mt-1">Official offers issued</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters, Search & Candidate Pipeline Section -->
+      <div class="glass-panel p-6 rounded-3xl border border-slate-800 space-y-5">
+        
+        <!-- Filter Bar -->
+        <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div class="flex flex-wrap items-center gap-3">
+            
+            <!-- Company Filter -->
+            <div class="flex items-center gap-2">
+              <label class="text-xs text-slate-400 font-semibold whitespace-nowrap">Company:</label>
+              <select id="employer-filter-company" onchange="filterEmployerApplications()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+                <option value="All">All Companies</option>
+              </select>
+            </div>
+
+            <!-- Status Filter -->
+            <div class="flex items-center gap-2">
+              <label class="text-xs text-slate-400 font-semibold whitespace-nowrap">Status:</label>
+              <select id="employer-filter-status" onchange="filterEmployerApplications()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+                <option value="All">All Statuses</option>
+                <option value="Under Review">Under Review</option>
+                <option value="Shortlisted">Shortlisted</option>
+                <option value="Interview Scheduled">Interview Scheduled</option>
+                <option value="Selected (Offer Extended)">Selected (Offer Extended)</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+
+            <!-- Branch Filter -->
+            <div class="flex items-center gap-2">
+              <label class="text-xs text-slate-400 font-semibold whitespace-nowrap">Branch:</label>
+              <select id="employer-filter-branch" onchange="filterEmployerApplications()" class="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 max-w-[180px] sm:max-w-none">
+                <option value="All">All Branches</option>
+                <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+                <option value="Artificial Intelligence & Data Science">Artificial Intelligence & Data Science</option>
+                <option value="Electronics & Communication Engineering">Electronics & Communication Engineering</option>
+                <option value="Electrical & Electronics Engineering">Electrical & Electronics Engineering</option>
+                <option value="Mechanical & Mechatronics">Mechanical & Mechatronics</option>
+                <option value="Civil / Other Engineering">Civil / Other Engineering</option>
+              </select>
+            </div>
+
+          </div>
+
+          <!-- Search Input -->
+          <div class="relative w-full md:w-64">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500"></i>
+            <input type="text" id="employer-search-query" oninput="filterEmployerApplications()" placeholder="Search candidates, roles, skills..." class="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+          </div>
+        </div>
+
+        <!-- Pipeline Table / Cards Container -->
+        <div id="employer-table-container" class="overflow-x-auto">
+          <!-- Rendered via JS -->
+        </div>
+
+      </div>
+
+    </div>
+
   </main>
 
   <!-- ========================================================================= -->
@@ -940,6 +1126,137 @@
       <button onclick="closeModal('modal-confirmation')" class="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition">
         Dismiss
       </button>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: EMPLOYER CANDIDATE ANALYSIS DOSSIER & SELECTION CONSOLE           -->
+  <!-- ========================================================================= -->
+  <div id="modal-employer-candidate" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm hidden items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-3xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative my-8 max-h-[90vh] overflow-y-auto">
+      <button onclick="closeModal('modal-employer-candidate')" class="absolute top-5 right-5 text-slate-400 hover:text-white transition">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <!-- Candidate Dossier Header -->
+      <div id="dossier-header-content"></div>
+
+      <!-- Quick Metrics Gauges -->
+      <div id="dossier-metrics-content" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+
+      <!-- Tab Switcher (Skills Alignment, Learning Roadmap Proof, Live Resume) -->
+      <div class="flex border-b border-slate-800 text-xs font-semibold">
+        <button id="tab-btn-dossier-skills" onclick="switchDossierTab('skills')" class="px-4 py-2.5 border-b-2 border-indigo-500 text-indigo-400 flex items-center gap-2">
+          <i data-lucide="check-circle" class="w-4 h-4"></i>
+          Skill Alignment & Gap
+        </button>
+        <button id="tab-btn-dossier-roadmap" onclick="switchDossierTab('roadmap')" class="px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2">
+          <i data-lucide="git-merge" class="w-4 h-4"></i>
+          Roadmap & Proof
+        </button>
+        <button id="tab-btn-dossier-resume" onclick="switchDossierTab('resume')" class="px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2">
+          <i data-lucide="file-text" class="w-4 h-4"></i>
+          ATS Resume Preview
+        </button>
+      </div>
+
+      <!-- Tab Contents -->
+      <div id="dossier-tab-skills" class="space-y-4 text-xs"></div>
+      <div id="dossier-tab-roadmap" class="space-y-4 text-xs hidden"></div>
+      <div id="dossier-tab-resume" class="space-y-4 text-xs hidden"></div>
+
+      <!-- Employer Hiring Decision Console -->
+      <div class="p-5 rounded-2xl bg-slate-950 border border-indigo-500/30 space-y-4">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <h4 class="text-sm font-bold text-white flex items-center gap-2">
+            <i data-lucide="sliders" class="w-4 h-4 text-indigo-400"></i>
+            Recruiter Selection & Action Console
+          </h4>
+          <span id="dossier-current-status-badge" class="px-2.5 py-1 rounded-full text-[10px] font-bold"></span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+          <!-- Update Status Dropdown -->
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1.5">Change Candidate Status</label>
+            <select id="dossier-update-status" onchange="handleStatusChangeDropdown(this.value)" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 focus:outline-none focus:border-indigo-500">
+              <option value="Under Review">Under Review</option>
+              <option value="Shortlisted">Shortlisted</option>
+              <option value="Interview Scheduled">Interview Scheduled</option>
+              <option value="Selected (Offer Extended)">Selected (Offer Extended)</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+
+          <!-- Recruiter Notes -->
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1.5">Recruiter Evaluation Note</label>
+            <input type="text" id="dossier-notes-input" placeholder="e.g. Verified skills match role requirements" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 focus:outline-none focus:border-indigo-500">
+          </div>
+        </div>
+
+        <!-- Extra details if Interview Scheduled -->
+        <div id="dossier-interview-fields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-2 border-t border-slate-800">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Interview Date & Time</label>
+            <input type="datetime-local" id="dossier-interview-datetime" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-200">
+          </div>
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Meeting Link (Google Meet / Teams)</label>
+            <input type="url" id="dossier-interview-meetlink" placeholder="https://meet.google.com/xyz-abcd-efg" class="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-200">
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+          <button onclick="saveCandidateStatusUpdate()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition border border-slate-700 flex items-center gap-2">
+            <i data-lucide="save" class="w-4 h-4"></i>
+            Save Decision & Update Status
+          </button>
+
+          <button onclick="openOfferLetterForCandidate()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20 transition flex items-center gap-2">
+            <i data-lucide="award" class="w-4 h-4"></i>
+            Extend Official Offer Letter
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: OFFICIAL KAUSHALSETU OFFER LETTER GENERATOR                        -->
+  <!-- ========================================================================= -->
+  <div id="modal-offer-letter" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-3xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative my-6 max-h-[90vh] overflow-y-auto">
+      <button onclick="closeModal('modal-offer-letter')" class="absolute top-5 right-5 text-slate-400 hover:text-white transition no-print">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <!-- Offer Letter Document Preview -->
+      <div id="offer-letter-content" class="bg-white text-slate-900 p-8 sm:p-10 rounded-2xl shadow-xl font-sans space-y-6 border border-slate-200">
+        <!-- Dynamic Offer Content -->
+      </div>
+
+      <!-- Recruiter Actions -->
+      <div class="flex flex-wrap items-center justify-between gap-3 no-print pt-2">
+        <div class="text-xs text-slate-400 flex items-center gap-1.5">
+          <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+          <span>Signed with AICTE & KaushalSetu National Skill Verification Hash</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <button onclick="printOfficialOfferLetter()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition flex items-center gap-2 border border-slate-700">
+            <i data-lucide="printer" class="w-4 h-4"></i>
+            Print / Save as PDF
+          </button>
+          <button onclick="dispatchOfficialOffer()" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold shadow-lg shadow-emerald-500/25 transition flex items-center gap-2">
+            <i data-lucide="send" class="w-4 h-4"></i>
+            Dispatch Offer to Candidate
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 
